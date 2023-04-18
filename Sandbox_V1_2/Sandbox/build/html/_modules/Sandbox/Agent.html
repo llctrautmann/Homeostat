@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.Agent &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.Agent</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.Agent</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.stimuli</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># the base class for agents. currently only differential drive robots are implemented, but other types of agent could</span>
+<span class="c1"># also be implemented easily enough</span>
+<div class="viewcode-block" id="Agent"><a class="viewcode-back" href="../../agents.html#Sandbox.Agent">[docs]</a><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An :class:`Agent` is an abstract subclass of :class:`System`. Classes which represent specific types of mobile agents, e.g. :class:`Robot` are subclasses of :class:`Agent`.</span>
+
+<span class="sd">        An :class:`Agent` is a mobile :class:`System` with position and orientation. It is expected that an :class:`Agent` will have sensors, a controller, and some way of moving through its environment.</span>
+
+<span class="sd">        When you subclass :class:`Agent`, you will need to implement the following methods:</span>
+
+<span class="sd">        * ``step_sensors(dt)``</span>
+<span class="sd">        * ``control(activations, dt)``</span>
+<span class="sd">        * ``step_actuators(speed_commands, dt)``</span>
+<span class="sd">        * ``integrate(actual_speeds, dt)``</span>
+<span class="sd">        * and ``update_children_positions()``</span>
+<span class="sd">        * as well as ``pygame_draw(self, screen, scale: float, shiftx: float, shifty: float)``, if you are going to animate your simulation</span>
+
+<span class="sd">        These methods split up the :class:`Agent`&#39;s side of its sensorimotor loop. The main reason for splitting them up is to make it easier to subclass agent implementations. For example, to add sensors to an existing :class:`Agent` subclass, you would only need to override ``step_sensors`` and ``control`` - ``step_actuators`` and ``integrate`` don&#39;t need to be touched. Another example would be if you wanted to change the dynamics of motion when subclassing an existing :class:`Agent` - it may only be necessary to override the ``integrate`` method, and leave the other methods as they are.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># I&#39;m not entirely sure about theta=None</span>
+    <span class="c1"># - this would be an odd kind of agent!</span>
+<div class="viewcode-block" id="Agent.__init__"><a class="viewcode-back" href="../../agents.html#Sandbox.Agent.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">colour</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">light</span><span class="p">:</span> <span class="n">LightSource</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(x: float, y: float, colour: str,  theta: float=None, radius: float=1, light: LightSource=None)</span>
+
+<span class="sd">            :param x: The :class:`Agent`&#39;s initial x-coordinate.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The :class:`Agent`&#39;s initial y-coordinate.</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :param theta: The :class:`Agent`&#39;s initial orientation.</span>
+<span class="sd">            :type theta: float</span>
+
+<span class="sd">            :param radius: The radius of the :class:`Agent`&#39;s body.</span>
+<span class="sd">            :type radius: float</span>
+
+<span class="sd">            :param colour: The colour of the :class:`Agent`&#39;s body.</span>
+<span class="sd">            :type colour: str</span>
+
+<span class="sd">            :param light: The :class:`LightSource` attached to the :class:`Agent`&#39;s body.</span>
+<span class="sd">            :type light: :class:`LightSource`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>  <span class="c1"># call System constructor. xy-variables are handled there</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colour</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">colour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">light</span><span class="p">:</span> <span class="n">LightSource</span> <span class="o">=</span> <span class="n">light</span></div>
+
+<div class="viewcode-block" id="Agent.step"><a class="viewcode-back" href="../../agents.html#Sandbox.Agent.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step the agent forwards in time.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the noise source over - not currently used here, although it typically will be in the step methods of an :class:`Agent`&#39;s subclasses.</span>
+<span class="sd">            :type dt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># step sensors</span>
+        <span class="n">activations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_sensors</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+        <span class="c1"># step controller</span>
+        <span class="n">speed_commands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="n">activations</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+
+        <span class="c1"># step motor objects, if agent has any, or otherwise deal with any</span>
+        <span class="c1"># dynamics of speed change such as inertia</span>
+        <span class="n">actual_speeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_actuators</span><span class="p">(</span><span class="n">speed_commands</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+
+        <span class="c1"># integrate agent&#39;s motion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">actual_speeds</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+
+        <span class="c1"># call System&#39;s step method</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>  <span class="c1"># this call goes to System</span>
+
+        <span class="c1"># update light and light sensor positions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_children_positions</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Agent.push"><a class="viewcode-back" href="../../agents.html#Sandbox.Agent.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method used to &quot;push&quot; an :class:`Agent` to a new position and orientation. The agent can be pushed in any single axis (x, y, rotation) or any combination of those axes.</span>
+
+<span class="sd">            This method is here for environmental interactions such as those between an :class:`Agent` and an :class:`Arena`. The :class:`Arena` takes care of watching for collisions between agents and its walls, and when it detects one, it pushes the colliding agent back inside, using this method. It is important that this method is used, rather than just directly changing the agent&#39;s ``x``, ``y``, and ``theta`` attributes, as this method will also update the states of attached systems, such as sensors.</span>
+
+<span class="sd">            :param x: The x-coordinate to push the agent to. Defaults to ``None``, in which case the agent&#39;s x-coordinate will be unchanged.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The y-coordinate to push the agent to. Defaults to ``None``, in which case the agent&#39;s y-coordinate will be unchanged.</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :param theta: The orientation to push the agent to. Defaults to ``None``, in which case the agent&#39;s orientation will be unchanged.</span>
+<span class="sd">            :type theta: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">x</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">if</span> <span class="n">y</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">if</span> <span class="n">theta</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thetas</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_children_positions</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

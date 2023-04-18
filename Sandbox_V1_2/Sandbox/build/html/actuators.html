@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Actuators &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Controllers" href="controllers.html" />
+    <link rel="prev" title="Agents" href="agents.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents.html">Agents</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Actuators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#motor-class">Motor class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Actuators</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/actuators.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="actuators">
+<h1>Actuators<a class="headerlink" href="#actuators" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="motor-class">
+<h2>Motor class<a class="headerlink" href="#motor-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.Motor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">Motor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia_coeff</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reversed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.noise.NoiseSource</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Motor.html#Motor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Motor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a motor. A motor has a maximum speed at which it will turn in either the forwards or backwards direction. Positive motor speeds results in forwards motion, and negative speeds result in backwards direction. This relationship can be reversed by setting the robot’s <code class="docutils literal notranslate"><span class="pre">reversed</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>. A motor can also have inertia, which is the motor’s resistance to changes of speed. If the inertia is set to 0, then the motor can change speed instantaneously. See the figure below for examples of how motors can behave with different combinations of maximum speed and inertia.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="images/Motor.svg"><img alt="Motor examples" src="images/Motor.svg" width="400" /></a>
+<p class="caption"><span class="caption-text">In the figure, the response of three different motors to a constant command of 20 is shown. Motor 1 has max_speed = 10, motor_inertia_coeff = 100. Motor 2 has max_speed = 40, motor_inertia_coeff = 50. Motor 3 has max_speed = 10, motor_inertia_coeff = 0. Motor 3 changes speed to the commanded valuse in a simgle time step. The speeds of motors 1 and 3 both saturate at their maximum speed value, which is less than the commanded value. The speed of motor 2 changes most slowly, as it has the highest inertia.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<dl class="py method">
+<dt id="Sandbox.Motor.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia_coeff</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reversed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><span class="pre">NoiseSource</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Motor.html#Motor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Motor.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_speed</strong> (<em>float</em>) – The maximum speed the motor can run at. Negative values will be converted to positive ones when they are copied to the motor’s attributes.</p></li>
+<li><p><strong>motor_inertia_coeff</strong> (<em>float</em>) – A parameter used to determine how quickly the motor’s speed can change. Defaults to 0, in which case the motor can change speed instantaneously.</p></li>
+<li><p><strong>reversed</strong> (<em>bool</em>) – A parameter which determines whether the motor runs in the forwards or reverse direction. Defaults to False, in which case the motor runs forwards.</p></li>
+<li><p><strong>noisemaker</strong> (<a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseSource</span></code></a>) – A <a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseSource</span></code></a> object, to generate noise which is added to the motor’s actual speed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Motor.get_data">
+<code class="sig-name descname"><span class="pre">get_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/Motor.html#Motor.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Motor.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to get a motor’s data. Returns the motors histories of speed, motor direction (based on “reversed” variable), and any noise which has been applied to the motor speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Motor’s data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Motor.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Motor.html#Motor.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Motor.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to reset a motor to its initial state. Resets max_speed, motor_inertia_coeff, speed, history of speeds, reversed, and history of reverseds.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Motor.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed_command</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="reference internal" href="_modules/Sandbox/Motor.html#Motor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Motor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to step motor forward in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>speed_command</strong> (<em>float</em>) – New speed command</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – Integration interval</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Motor speed after stepping</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agents.html" class="btn btn-neutral float-left" title="Agents" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="controllers.html" class="btn btn-neutral float-right" title="Controllers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

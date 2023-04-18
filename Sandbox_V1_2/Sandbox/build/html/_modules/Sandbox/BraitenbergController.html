@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.BraitenbergController &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.BraitenbergController</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.BraitenbergController</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.Controller</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.noise</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="BraitenbergController"><a class="viewcode-back" href="../../controllers.html#Sandbox.BraitenbergController">[docs]</a><span class="k">class</span> <span class="nc">BraitenbergController</span><span class="p">(</span><span class="n">Controller</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A subclass of :class:`Controller`, which can be used to control an instance of :class:`Robot`.</span>
+<span class="sd">        It, optionally, has a noisemaker for each of the control commands to the robots two motors.</span>
+<span class="sd">        See the ``BraitenbergController.py`` source code file for examples of controllers which implement the behaviours of simple Braitenberg Vehicles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BraitenbergController.__init__"><a class="viewcode-back" href="../../controllers.html#Sandbox.BraitenbergController.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_fun</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">left_noisemaker</span><span class="p">:</span> <span class="n">NoiseSource</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right_noisemaker</span><span class="p">:</span> <span class="n">NoiseSource</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(step_fun: Callable[[float, List[float], List[float], List[float]], List[float]], left_noisemaker: NoiseSource=None, right_noisemaker: NoiseSource=None, gain=1)</span>
+
+<span class="sd">            :param step_fun: The function which will be used to generate the controller&#39;s outputs, given the inputs to the controller&#39;s ``step`` method, the interval of time to integrate over, and any state and parameters the controller makes use of.</span>
+<span class="sd">            :type step_fun: function</span>
+
+<span class="sd">            :param left_noisemaker: A noise source which will potentially affect the command which the controller outputs for the robot&#39;s left motor.</span>
+<span class="sd">            :type left_noisemaker: :class:`NoiseSource`</span>
+
+<span class="sd">            :param right_noisemaker: A noise source which will potentially affect the command which the controller outputs for the robot&#39;s right motor.</span>
+<span class="sd">            :type right_noisemaker: :class:`NoiseSource`</span>
+
+<span class="sd">            :param gain: A gain parameter which can be used to control how fast the robot moves in response to being stimulated by a light source.</span>
+<span class="sd">            :type gain: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">noisemakers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">noisemakers_inds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">left_noisemaker</span><span class="p">:</span>
+            <span class="n">noisemakers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">left_noisemaker</span><span class="p">)</span>
+            <span class="n">noisemakers_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">right_noisemaker</span><span class="p">:</span>
+            <span class="n">noisemakers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">right_noisemaker</span><span class="p">)</span>
+            <span class="n">noisemakers_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">inputs_n</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">commands_n</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">step_fun</span><span class="o">=</span><span class="n">step_fun</span><span class="p">,</span> <span class="n">noisemakers</span><span class="o">=</span><span class="n">noisemakers</span><span class="p">,</span> <span class="n">noisemakers_inds</span><span class="o">=</span><span class="n">noisemakers_inds</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[</span><span class="n">gain</span><span class="p">])</span></div></div>
+
+<div class="viewcode-block" id="light_seeking"><a class="viewcode-back" href="../../controllers.html#Sandbox.light_seeking">[docs]</a><span class="k">def</span> <span class="nf">light_seeking</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">state</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="p">[])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A function, for use with a :class:`BraitenbergController`, which implements light-seeking behaviour.</span>
+
+<span class="sd">        :param dt: Interval of time to integrate the controller over.</span>
+<span class="sd">        :type dt: float</span>
+
+<span class="sd">        :param inputs: The list of sensory inputs to the controller.</span>
+<span class="sd">        :type inputs: list[float]</span>
+
+<span class="sd">        :param params: The list of controller parameters (in this case, just the controller&#39;s ``gain`` attribute).</span>
+<span class="sd">        :type params: list[float]</span>
+
+<span class="sd">        :param state: This variable is included to allow elements of an agent&#39;s state to be used in its controller - in general, use of this is discouraged - where an agent&#39;s state is to be used in control, it should either be measured by an appropriate sensor, and therefore be part of the ``inputs`` vector, or it should be inferred by the controller itself.</span>
+<span class="sd">        :type state: list[float]</span>
+
+<span class="sd">        :return: List of motor commands.</span>
+<span class="sd">        :rtype: list of floats.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># set left motor speed</span>
+    <span class="n">left_speed_command</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># set right motor speed</span>
+    <span class="n">right_speed_command</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">left_speed_command</span><span class="p">,</span> <span class="n">right_speed_command</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="light_avoiding"><a class="viewcode-back" href="../../controllers.html#Sandbox.light_avoiding">[docs]</a><span class="k">def</span> <span class="nf">light_avoiding</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">state</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="p">[])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A function, for use with a :class:`BraitenbergController`, which implements light-avoiding behaviour.</span>
+
+<span class="sd">        :param dt: Interval of time to integrate the controller over.</span>
+<span class="sd">        :type dt: float</span>
+
+<span class="sd">        :param inputs: The list of sensory inputs to the controller.</span>
+<span class="sd">        :type inputs: list[float]</span>
+
+<span class="sd">        :param params: The list of controller parameters (in this case, just the controller&#39;s ``gain`` attribute).</span>
+<span class="sd">        :type params: list[float]</span>
+
+<span class="sd">        :param state: This variable is included to allow elements of an agent&#39;s state to be used in its controller - in general, use of this is discouraged - where an agent&#39;s state is to be used in control, it should either be measured by an appropriate sensor, and therefore be part of the ``inputs`` vector, or it should be inferred by the controller itself.</span>
+<span class="sd">        :type state: list[float]</span>
+
+<span class="sd">        :return: List of motor commands.</span>
+<span class="sd">        :rtype: list of floats.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># set left motor speed</span>
+    <span class="n">left_speed_command</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># set right motor speed</span>
+    <span class="n">right_speed_command</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">left_speed_command</span><span class="p">,</span> <span class="n">right_speed_command</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

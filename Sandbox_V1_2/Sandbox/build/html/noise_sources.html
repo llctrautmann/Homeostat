@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sources of noise &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Disturbances" href="disturbance_sources.html" />
+    <link rel="prev" title="Environments" href="environment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sources of noise</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#noisesource-class">NoiseSource class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#whitenoisesource-class">WhiteNoiseSource class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#brownnoisesource-class">BrownNoiseSource class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spikenoisesource-class">SpikeNoiseSource class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#noisemaker-class">NoiseMaker class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Sources of noise</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/noise_sources.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="sources-of-noise">
+<h1>Sources of noise<a class="headerlink" href="#sources-of-noise" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="noisesource-class">
+<h2>NoiseSource class<a class="headerlink" href="#noisesource-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.NoiseSource">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">NoiseSource</span></code><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>The abstract superclass for all classes representing sources of noise.</p>
+<dl class="py method">
+<dt id="Sandbox.NoiseSource.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseSource.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseSource.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise NoiseSource.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.NoiseSource.get_data">
+<code class="sig-name descname"><span class="pre">get_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseSource.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseSource.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the noise source’s data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The noise source’s data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict of data, which only includes the history of noise outputs in this superclass.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.NoiseSource.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseSource.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseSource.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset NoiseSource, by resetting noise level to 0 and deleting any existing history of noise outputs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.NoiseSource.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseSource.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseSource.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step the noise source forwards in time, and generate a noise output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Interval of time to integrate the noise source over - not currently used.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The noise source’s output.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="whitenoisesource-class">
+<h2>WhiteNoiseSource class<a class="headerlink" href="#whitenoisesource-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.WhiteNoiseSource">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">WhiteNoiseSource</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_val</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#WhiteNoiseSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.WhiteNoiseSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a source of white noise. In every simulation step, the noise source outputs a random value drawn from a uniform distribution, the limits of which are set when the noise source is constructed.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="images/WhiteNoiseSource.svg"><img alt="White noise" src="images/WhiteNoiseSource.svg" width="400" /></a>
+</div>
+<dl class="py method">
+<dt id="Sandbox.WhiteNoiseSource.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#WhiteNoiseSource.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.WhiteNoiseSource.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct instance of <a class="reference internal" href="#Sandbox.WhiteNoiseSource" title="Sandbox.WhiteNoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">WhiteNoiseSource</span></code></a>. The noise generated by the noisesource will lie between <code class="docutils literal notranslate"><span class="pre">min_val</span></code> and <code class="docutils literal notranslate"><span class="pre">max_val</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min_val</strong> (<em>float</em>) – The minimum value of the noise that this source will output.</p></li>
+<li><p><strong>max_val</strong> (<em>float</em>) – The maximum value of the noise that this source will output.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.WhiteNoiseSource.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="reference internal" href="_modules/Sandbox/noise.html#WhiteNoiseSource.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.WhiteNoiseSource.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step noise source forwards in time. For this class, all that involves is generating a new output value and updating its history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Interval of time to integrate the noise source over - not currently used.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output from noise source.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="brownnoisesource-class">
+<h2>BrownNoiseSource class<a class="headerlink" href="#brownnoisesource-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.BrownNoiseSource">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">BrownNoiseSource</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_step_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#BrownNoiseSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.BrownNoiseSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a source of brown noise, (e.g. a random walk like brownian motion). Technically, brown noise is the integral of white noise, so in each simulation step white noise is generated and then added to the noise level from the previous simulation step. This results in a drifting noise level.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="images/BrownNoiseSource.svg"><img alt="Brown noise" src="images/BrownNoiseSource.svg" width="400" /></a>
+</div>
+<dl class="py method">
+<dt id="Sandbox.BrownNoiseSource.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_step_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#BrownNoiseSource.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.BrownNoiseSource.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct instance of <a class="reference internal" href="#Sandbox.BrownNoiseSource" title="Sandbox.BrownNoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrownNoiseSource</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_step_size</strong> (<em>float</em>) – The maximum distance that the output of the <a class="reference internal" href="#Sandbox.BrownNoiseSource" title="Sandbox.BrownNoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrownNoiseSource</span></code></a> will move by in a single simulation step.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.BrownNoiseSource.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="reference internal" href="_modules/Sandbox/noise.html#BrownNoiseSource.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.BrownNoiseSource.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step noise source forwards in time. For this class, all that involves is generating a new output value and updating its history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Interval of time to integrate the noise source over - not currently used.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output from noise source.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="spikenoisesource-class">
+<h2>SpikeNoiseSource class<a class="headerlink" href="#spikenoisesource-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.SpikeNoiseSource">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">SpikeNoiseSource</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#SpikeNoiseSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.SpikeNoiseSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a source of “spike” noise.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="images/SpikeNoiseSource.svg"><img alt="Spike noise" src="images/SpikeNoiseSource.svg" width="400" /></a>
+</div>
+<dl class="py method">
+<dt id="Sandbox.SpikeNoiseSource.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#SpikeNoiseSource.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.SpikeNoiseSource.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a spike noise source. The sizes of positive and negative spikes are controlled independently. If you don’t want to use either positive or negative spikes, just set the corresponding parameter to 0, but note that you might want to double the spike probability parameter to compensate for half of the spikes (on average) being 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob</strong> (<em>float</em>) – The probability of a spike being emitted. When a spike is output, it will be either positive or negative with equal probability.</p></li>
+<li><p><strong>pos_size</strong> (<em>float</em>) – The size of a positive spike.</p></li>
+<li><p><strong>neg_size</strong> (<em>float</em>) – The size of a negative spike.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.SpikeNoiseSource.set_params">
+<code class="sig-name descname"><span class="pre">set_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/noise.html#SpikeNoiseSource.set_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.SpikeNoiseSource.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method for setting the noise source’s parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – The noise source’s parameters, in the form <code class="docutils literal notranslate"><span class="pre">[prob,</span> <span class="pre">pos_size,</span> <span class="pre">neg_size]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.SpikeNoiseSource.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="reference internal" href="_modules/Sandbox/noise.html#SpikeNoiseSource.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.SpikeNoiseSource.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step noise source forwards in time. For this class, all that involves is generating a new output value and updating its history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Interval of time to integrate the noise source over - not currently used.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output from noise source.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="noisemaker-class">
+<h2>NoiseMaker class<a class="headerlink" href="#noisemaker-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.NoiseMaker">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">NoiseMaker</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">white_noise_params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brown_noise_step</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spike_noise_params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseMaker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseMaker" title="Permalink to this definition">¶</a></dt>
+<dd><p>A subclass of <a class="reference internal" href="#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseSource</span></code></a> which provides a source of mixed noise: white, brown and “spike”. A <a class="reference internal" href="#Sandbox.NoiseMaker" title="Sandbox.NoiseMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseMaker</span></code></a> has its own instances of <a class="reference internal" href="#Sandbox.WhiteNoiseSource" title="Sandbox.WhiteNoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">WhiteNoiseSource</span></code></a>, <a class="reference internal" href="#Sandbox.BrownNoiseSource" title="Sandbox.BrownNoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrownNoiseSource</span></code></a> and <a class="reference internal" href="#Sandbox.SpikeNoiseSource" title="Sandbox.SpikeNoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpikeNoiseSource</span></code></a>, and its output is the sum of their outputs.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="images/NoiseMaker.svg"><img alt="Mixed noise" src="images/NoiseMaker.svg" width="400" /></a>
+</div>
+<dl class="py method">
+<dt id="Sandbox.NoiseMaker.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">white_noise_params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brown_noise_step</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spike_noise_params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseMaker.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseMaker.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct <a class="reference internal" href="#Sandbox.NoiseMaker" title="Sandbox.NoiseMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseMaker</span></code></a>. The noisemaker’s individual noise sources will only be constructed if non-zero parameters for them are passed into <code class="docutils literal notranslate"><span class="pre">__init__</span></code>. The <a class="reference internal" href="#Sandbox.NoiseMaker" title="Sandbox.NoiseMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseMaker</span></code></a> class does not provide for this to be changed after construction, although additional noise sources can always be added to a noisemaker’s list manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>white_noise_params</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – Parameters for the noisemaker’s <a class="reference internal" href="#Sandbox.WhiteNoiseSource" title="Sandbox.WhiteNoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">WhiteNoiseSource</span></code></a>. Defaults to [0, 0], in which case the noisemaker will</p></li>
+<li><p><strong>brown_noise_step</strong> (<em>float</em>) – </p></li>
+<li><p><strong>spike_noise_params</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.NoiseMaker.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseMaker.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseMaker.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset NoiseSource, by resetting noise level to 0 and deleting any existing history of noise outputs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.NoiseMaker.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="reference internal" href="_modules/Sandbox/noise.html#NoiseMaker.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.NoiseMaker.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step the <a class="reference internal" href="#Sandbox.NoiseMaker" title="Sandbox.NoiseMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseMaker</span></code></a> forwards in time. All attached noise sources are stepp forwards, and then their outputs are summed to get the output from this noisemaker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Interval of time to integrate the noise source over - not currently used.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output from noise source.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="environment.html" class="btn btn-neutral float-left" title="Environments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="disturbance_sources.html" class="btn btn-neutral float-right" title="Disturbances" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

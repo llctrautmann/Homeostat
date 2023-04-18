@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.DisturbanceSource &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.DisturbanceSource</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.DisturbanceSource</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.System</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.noise</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.Robot</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.stimuli</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">cp</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="c1"># base class for sources of disturbance. disturbances can be easily set up to be enabled and disabled at predetermined</span>
+<span class="c1"># times during a run of a simulation</span>
+<span class="c1">#   at every time in start_times, the disturbance should become active</span>
+<span class="c1">#   at every time in stop_times, the disturbance should be disabled again</span>
+<span class="c1">#   N.B. some of these disturbances are severe enough to require adaptation in a robot&#39;s controller, and some might be</span>
+<span class="c1">#   easier to deal with than others</span>
+<span class="c1">#   - using more than one of these at once could be very challenging</span>
+<span class="c1">#   - they are fairly easy to create, if you have ideas of your own for disturbances</span>
+<div class="viewcode-block" id="DisturbanceSource"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.DisturbanceSource">[docs]</a><span class="k">class</span> <span class="nc">DisturbanceSource</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An abstract superclass for timed sources of disturbances. A :class:`DisturbanceSource` is a subclass of :class:`System`, which has no position.</span>
+
+<span class="sd">        Subclasses of :class:`DisturbanceSource` must call its ``step()`` method using ``super().step(dt)``, so that disturbances are enabled and disabled at the right times.</span>
+
+<span class="sd">        When the :class:`DisturbanceSource` is constructed, it is passed lists of times at which to be activated (enabled) and deactivated (disabled). A :class:`DisturbanceSource` is disabled by default when first created. When a :class:`DisturbanceSource` is active, the list of times to disable it is monitored, and when it is not active, the list of times to enable it is monitored. When the :class:`DistubanceSource`&#39;s internal clock, ``t``, exceeds the first time in the currently monitored list, then the :class:`DisturbanceSource` will be enabled/disabled as appropriate. When this happens, the listed time which has just been used will be removed from the list, so that the next time in the list (if there is one) will become the first element in the list.</span>
+
+<span class="sd">        As it is always the first elements in the two lists which are monitored, the two together must be ordered correctly with respect to time. For example, if ``start_times = [100, 200]`` and ``end_times = [50, 130]``, then the disturbance will be activated at t &gt;= 100, and then deactivated in the next simulation step, as then t &gt; 100 &gt; 50. Then the same thing will happen again, at t &gt;= 200 and in the following simulation step, because 200 &gt; 130.</span>
+
+<span class="sd">        If no end_times are specified, then once any disturbance is active, it will be so until the simulation ends. If you have more start times than end times, and they are appropriately sequenced, then there will be a time at which the disturbance will be activated without ever being deactivated again. For example, if ``start_times = [100, 200, 500]`` and ``end_times = [150, 300]``, then the disturbance will be enabled and disabled twice, and then be enabled from t = 500 until the simulation ends (assuming that the simulation duration &gt; 500).</span>
+
+<span class="sd">        If you would like a disturbance to be &#39;one-shot&#39;, i.e. only active for a single simulation step, then the easiest way to implement that is in the step() method of the subclass of :class:`DisturbanceSource`, e.g. as in the :class:`SensoryInversionDisturbanceSource` class ``step()`` method, where whenever the disturbance is applied, ``self.enabled`` is subsequently set to ``False`` to disable it again.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct disturbance source</span>
+<div class="viewcode-block" id="DisturbanceSource.__init__"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.DisturbanceSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_times</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="p">[],</span> <span class="n">stop_times</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="p">[],</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(start_times: List[int]=[], stop_times: List[int]=[], enabled: bool=True)</span>
+
+<span class="sd">            :param start_times: The list of times at which a :class:`DisturbanceSource` is activated.</span>
+<span class="sd">            :type start_time: list[int]</span>
+
+<span class="sd">            :param stop_times: The list of times at which a :class:`DisturbanceSource` is deactivated.</span>
+<span class="sd">            :type stop_times: list[int]</span>
+
+<span class="sd">            :param enabled: A parameter which determines whether or not a :class:`DisturbanceSource` is active. The :class:`DisturbanceSource` manages this variable itself. In most cases, it will be best to leave this variable as ``False`` when a :class:`DisturbanceSource` is constructed, and only use ``start_times`` and ``stop_times`` to inform the disturbance source when to change it.</span>
+<span class="sd">            :type enabled: bool</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span>
+        <span class="k">if</span> <span class="n">start_times</span><span class="p">:</span>  <span class="c1"># if any start_times are passed in, then the disturbance is initially disabled, and it will not be enabled until the first start time is reached</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># DisturbanceSources keep track of time internally. a number of classes do this, and it is certainly not the most computationally efficient approach, but it avoids using a global time variable (which could be horrendous)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_times</span> <span class="o">=</span> <span class="n">start_times</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_times</span> <span class="o">=</span> <span class="n">stop_times</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_enabled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span>
+
+        <span class="c1"># I CAN DIRECTLY COPY THESE LISTS?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_start_times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">start_times</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_start_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_stop_times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stop_times</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_stop_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DisturbanceSource.step"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.DisturbanceSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step the disturbance source forwards in time. This is where the disturbance gets enabled and disabled. The effect of the disturbance is be implemented in the step methods for the subclasses of DisturbancSource</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the disturbance source over.</span>
+<span class="sd">            :type dt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>  <span class="c1"># increment time variable by simulatino step size</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_times</span><span class="p">:</span>  <span class="c1"># if the disturbance is enabled, then check if stop_times is empty, and if it is, then there is nothing left to do, so just return</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># otherwise, check to see if it is time to disable the disturbance yet</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># always get the end_time at the beginning of the list</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stop_times</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># every time an end time is used, it is removed (popped) from the list as it will not be used again</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_times</span><span class="p">:</span>  <span class="c1"># if the disturbance is disabled but there are no start_times remaining, then there is nothing left to do, so just return</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># otherwise, check to see if it is time to enable the disturbance yet</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># always get the start_time at the beginning of the list</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">start_times</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># every time a start time is used, it is removed (popped) from the list as it will not be used again</span></div>
+
+<div class="viewcode-block" id="DisturbanceSource.reset"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.DisturbanceSource.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Reset DisturbanceSource by resetting its timer, enabled state and start/stop time lists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_enabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_times</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_start_times</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_stop_times</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># it uses a WhiteNoiseSource, which is effectively integrated over time to cause</span>
+<span class="c1"># drift in the robot&#39;s sensor positions</span>
+<span class="c1">#   this is a gradual change to the robot&#39;s morphology which, if big enough, will</span>
+<span class="c1">#   make it necessary for the controller to adapt</span>
+<span class="c1">#   depending on how large the maximum move is, and how long the disturbance is</span>
+<span class="c1">#   applied for, this disturbance can be a major problem, and it may not even be</span>
+<span class="c1">#   possible for most controllers to adapt if, for example, both sensors end up</span>
+<span class="c1">#   on the same side of the robot&#39;s body</span>
+<div class="viewcode-block" id="MovingSensorsDisturbanceSource"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.MovingSensorsDisturbanceSource">[docs]</a><span class="k">class</span> <span class="nc">MovingSensorsDisturbanceSource</span><span class="p">(</span><span class="n">DisturbanceSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class for making a :class:`Robot`&#39;s light sensors gradually change, through</span>
+<span class="sd">        small random movements, their angular position on the robot&#39;s body. The</span>
+<span class="sd">        sensors will always be the body&#39;s perimeter, and change their orientations to</span>
+<span class="sd">        match their new angular positions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct disturbance source</span>
+<div class="viewcode-block" id="MovingSensorsDisturbanceSource.__init__"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.MovingSensorsDisturbanceSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">:</span> <span class="n">Robot</span><span class="p">,</span> <span class="n">max_move</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">36</span><span class="p">,</span> <span class="n">move_left</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">move_right</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">start_times</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="p">[],</span> <span class="n">stop_times</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="p">[],</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sensor_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(robot, max_move=np.pi/36, move_left=True, move_right=True, start_times=[], stop_times=[], enabled=True, sensor_indices=[0, 1])</span>
+
+<span class="sd">            :param robot: The class:`Robot` instance which will be disturbed.</span>
+<span class="sd">            :type robot: class:`Robot`</span>
+
+<span class="sd">            :param max_move: The maximum angle by which a sensor will move in a single simulation step.</span>
+<span class="sd">            :type max_move: float</span>
+
+<span class="sd">            :param move_left: Not used in this implementation.</span>
+<span class="sd">            :type move_left: bool</span>
+
+<span class="sd">            :param move_right: Not used in this implementation.</span>
+<span class="sd">            :type move_right: bool</span>
+
+<span class="sd">            :param start_times: The list of times at which a :class:`DisturbanceSource` is activated.</span>
+<span class="sd">            :type start_time: list[int]</span>
+
+<span class="sd">            :param stop_times: The list of times at which a :class:`DisturbanceSource` is deactivated.</span>
+<span class="sd">            :type stop_times: list[int]</span>
+
+<span class="sd">            :param enabled: A parameter which determines whether or not a :class:`DisturbanceSource` is active.</span>
+
+<span class="sd">            :param sensor_indices: The indices of the sensors, in the robot&#39;s sensor list, which will be disturbed.</span>
+<span class="sd">            :type sensor_indices: list[int]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">start_times</span><span class="p">,</span> <span class="n">stop_times</span><span class="p">,</span> <span class="n">enabled</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robot</span> <span class="o">=</span> <span class="n">robot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move_left</span> <span class="o">=</span> <span class="n">move_left</span>  <span class="c1"># left sensor will be affected, if this is True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move_right</span> <span class="o">=</span> <span class="n">move_right</span>  <span class="c1"># right sensor will be affectd, if this is True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noisesource</span> <span class="o">=</span> <span class="n">WhiteNoiseSource</span><span class="p">(</span><span class="n">min_val</span><span class="o">=-</span><span class="n">max_move</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_move</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor_indices</span> <span class="o">=</span> <span class="n">sensor_indices</span></div>
+
+    <span class="c1"># step disturbance</span>
+<div class="viewcode-block" id="MovingSensorsDisturbanceSource.step"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.MovingSensorsDisturbanceSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step :class:`MovingSensorsDisturbanceSource` forwards in time. The sensors specified in ``sensor_indices`` will be moved by a random amount whenever the disturbance source is enabled.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the disturbance source over.</span>
+<span class="sd">            :type dt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_indices</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">sensor_angles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisesource</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MovingSensorsDisturbanceSource.reset"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.MovingSensorsDisturbanceSource.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Reset DisturbanceSource by resetting its timer, enabled state and start/stop time lists, as well as its noise source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noisesource</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div></div>
+
+<span class="c1"># this implements a large-scale sensory inversion, which will be quite easy to adapt to, but only if it can be reliably</span>
+<span class="c1"># detected.</span>
+<span class="c1">#   - in the case of this disturbance, detection may be the hard part</span>
+<span class="c1">#   - a relatively easy place to begin would be with a light-seeking robot in an environment with only one light source</span>
+<span class="c1">#       - then it shouldn&#39;t be too hard to detect the sudden change in behaviour this disturbance will cause</span>
+<span class="c1">#   - in more complex environments, and/or if combined with other disturbances and noise, this becomes a real challenge</span>
+<div class="viewcode-block" id="SensoryInversionDisturbanceSource"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.SensoryInversionDisturbanceSource">[docs]</a><span class="k">class</span> <span class="nc">SensoryInversionDisturbanceSource</span><span class="p">(</span><span class="n">DisturbanceSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class for switching the positions of two of a :class:`Robot`&#39;s sensors.</span>
+
+<span class="sd">        An example of how this will often be used is in a :class:`Robot` with two</span>
+<span class="sd">        :class:`LightSensor` s, like Braitenberg&#39;s light-seeking and light-avoiding vehicles. Braitenberg&#39;s *aggressor* (light-seeker) can be turned into his *coward* (light-avoider) simply by changing its sensorimotor connections from crossed to direct. Keeping the connections the same and swapping the positions of the sensors has the same effect.</span>
+
+<span class="sd">        For a :class:`Robot` with more than two sensors, this disturbance source can be used with any pair, specified by ``sensor_indices`` when the :class:`SensoryInversionDisturbanceSource` is constructed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct disturbance source</span>
+<div class="viewcode-block" id="SensoryInversionDisturbanceSource.__init__"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.SensoryInversionDisturbanceSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">:</span> <span class="n">Robot</span><span class="p">,</span> <span class="n">start_times</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">sensor_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(robot, start_times, sensor_indices=[0, 1])</span>
+
+<span class="sd">            :param robot: The :class:`Robot` which will be disturbed.</span>
+<span class="sd">            :type robot: :class:`Robot`</span>
+
+<span class="sd">            :param start_times: The list of times at which a :class:`DisturbanceSource` is activated.</span>
+<span class="sd">            :type start_time: list[int]</span>
+
+<span class="sd">            :param sensor_indices: The indices of the two sensors which will have their positions switched.</span>
+<span class="sd">            :type sensor_indices: list[int]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">start_times</span><span class="p">,</span> <span class="p">[],</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robot</span> <span class="o">=</span> <span class="n">robot</span>  <span class="c1"># the robot which will be disturbed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor_indices</span> <span class="o">=</span> <span class="n">sensor_indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_angles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">sensor_angles</span></div>
+
+    <span class="c1"># step disturbance source</span>
+<div class="viewcode-block" id="SensoryInversionDisturbanceSource.step"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.SensoryInversionDisturbanceSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step :class:`SensoryInversionDisturbanceSource` forwards in time. When the disturbance source becomes enabled, the sensors will be switched, and then the disturbance source will imeediately be disabled again.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the disturbance source over.</span>
+<span class="sd">            :type dt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>  <span class="c1"># rewire connections between sensor and motors</span>
+            <span class="c1"># swap sensor angles</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">sensor_angles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">sensor_angles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">sensor_angles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_indices</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">sensor_angles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_indices</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">temp</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># unlike a generic DisturbanceSource, this is a one-shot disturbance, and so is automatically disable immediately after being applied</span></div>
+
+<div class="viewcode-block" id="SensoryInversionDisturbanceSource.reset"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.SensoryInversionDisturbanceSource.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Reset DisturbanceSource by resetting its timer, enabled state and start/stop time lists, as well as robot sensor angles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">sensor_angles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_angles</span></div></div>
+
+<div class="viewcode-block" id="LightSwitcherDisturbanceSource"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.LightSwitcherDisturbanceSource">[docs]</a><span class="k">class</span> <span class="nc">LightSwitcherDisturbanceSource</span><span class="p">(</span><span class="n">DisturbanceSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="sd">        The light sources which will be disturbed should have both of their ``colour`` and ``label`` parameters set to either &#39;red&#39; or &#39;yellow&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LightSwitcherDisturbanceSource.__init__"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.LightSwitcherDisturbanceSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">light_sources</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LightSource</span><span class="p">],</span> <span class="n">start_times</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">switch_colours</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow&#39;</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(light_sources: List[LightSource], start_times: List[int], switch_colours: List[str]=[&#39;red&#39;, &#39;yellow&#39;])</span>
+
+<span class="sd">            :param light_sources: The list of light sources which will be disturbed.</span>
+<span class="sd">            :type light_sources: list[:class:`LightSource`]</span>
+
+<span class="sd">            :param start_times: The list of times at which a :class:`DisturbanceSource` is activated.</span>
+<span class="sd">            :type start_time: list[int]</span>
+
+<span class="sd">            :param switch_colours: The two colours which the light sources will be switched between.</span>
+<span class="sd">            :type switch_colours: list[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">start_times</span><span class="p">,</span> <span class="p">[],</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">light_sources</span> <span class="o">=</span> <span class="n">light_sources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">switch_colours</span> <span class="o">=</span> <span class="n">switch_colours</span></div>
+
+<div class="viewcode-block" id="LightSwitcherDisturbanceSource.step"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.LightSwitcherDisturbanceSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step :class:`LightSwitcherDisturbanceSource` forwards in time. When the disturbance source becomes enabled, the lights will be switched, and then the disturbance source will imeediately be disabled again.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the disturbance source over.</span>
+<span class="sd">            :type dt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_sources</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span><span class="p">:</span>
+                    <span class="n">s</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;yellow&#39;</span>
+                    <span class="n">s</span><span class="o">.</span><span class="n">colour</span> <span class="o">=</span> <span class="s1">&#39;yellow&#39;</span>
+                <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="s1">&#39;yellow&#39;</span><span class="p">:</span>
+                    <span class="n">s</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+                    <span class="n">s</span><span class="o">.</span><span class="n">colour</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># unlike a generic DisturbanceSource, this is a one-shot disturbance, and so is automatically disabled immediately after being applied</span>
+
+        <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Reset DisturbanceSource by resetting its timer, enabled state and start/stop time lists, as well as restoring lights to their riginal states.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_sources</span><span class="p">:</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="SensorLabelSwitcherDisturbance"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.SensorLabelSwitcherDisturbance">[docs]</a><span class="k">class</span> <span class="nc">SensorLabelSwitcherDisturbance</span><span class="p">(</span><span class="n">DisturbanceSource</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        A &quot;one-shot&quot; disturbance source which changes the labels of the disturbed :class:`Robot`&#39;s sensors, so that the :class:`LightSource` s which they detect are changed, according to the list of labels passed to the :class:`DisturbanceSource`&#39;s constructor.</span>
+
+<span class="sd">        Similar in effect to :class:`LightSwitcherDisturbanceSource`, except that more than two labels can be used here. For example, if the ``labels`` list is ``[&#39;yellow&#39;, &#39;red&#39;, &#39;food&#39;]``, the sensors&#39; labels will cycle through ``&#39;yellow&#39;``, ``&#39;red&#39;``, ``&#39;food&#39;``, ``&#39;yellow&#39;``, and so on.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="SensorLabelSwitcherDisturbance.__init__"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.SensorLabelSwitcherDisturbance.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">:</span> <span class="n">Robot</span><span class="p">,</span> <span class="n">start_times</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span><span class="s1">&#39;red&#39;</span><span class="p">],</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(robot: Robot, start_times: List[int], labels: List[str]=[&#39;yellow&#39;,&#39;red&#39;], enabled: bool=True)</span>
+
+<span class="sd">            :param robot: The :class:`Robot` to be disturbed.</span>
+<span class="sd">            :type robot: :class:`Robot`</span>
+
+<span class="sd">            :param start_times: The list of times at which a :class:`DisturbanceSource` is activated.</span>
+<span class="sd">            :type start_time: list[int]</span>
+
+<span class="sd">            :param stop_times: The list of times at which a :class:`DisturbanceSource` is deactivated.</span>
+<span class="sd">            :type stop_times: list[int]</span>
+
+<span class="sd">            :param enabled: A parameter which determines whether or not a :class:`DisturbanceSource` is active.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">start_times</span><span class="o">=</span><span class="n">start_times</span><span class="p">,</span> <span class="n">stop_times</span><span class="o">=</span><span class="p">[],</span> <span class="n">enabled</span><span class="o">=</span><span class="n">enabled</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robot</span> <span class="o">=</span> <span class="n">robot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels_ind</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels_n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SensorLabelSwitcherDisturbance.step"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.SensorLabelSwitcherDisturbance.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step :class:`SensorLabelSwitcherDisturbance` forwards in time. When the disturbance source becomes enabled, the lights which the sensor detects will be switched to the next in the list of labels (which will be the first in the list, if the end has already been reached), and then the disturbance source will immediately be disabled again.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the disturbance source over.</span>
+<span class="sd">            :type dt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+
+            <span class="c1"># print(&#39;i\&#39;m disturbed at &#39;, self.t)</span>
+
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">sensors</span><span class="p">:</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_ind</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_n</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">labels_ind</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="SensorLabelSwitcherDisturbance.reset"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.SensorLabelSwitcherDisturbance.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Reset disturbance, so it can be re-used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels_ind</span> <span class="o">=</span> <span class="mi">0</span></div></div>
+
+<div class="viewcode-block" id="ParameterDisturbanceSource"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.ParameterDisturbanceSource">[docs]</a><span class="k">class</span> <span class="nc">ParameterDisturbanceSource</span><span class="p">(</span><span class="n">DisturbanceSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A subclass of :class:`DisturbanceSource` which disturbs the parameters of a :class:`Controller`, moving them by some random distance in every simulation step when the disturbance is active.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ParameterDisturbanceSource.__init__"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.ParameterDisturbanceSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller</span><span class="p">:</span> <span class="n">Controller</span><span class="p">,</span> <span class="n">start_times</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(controller: Controller, start_times: List[int], enabled: bool=True)</span>
+
+<span class="sd">            :param controller: The :class:`Controller` to be disturbed.</span>
+<span class="sd">            :type controller: :class:`Controller`</span>
+
+<span class="sd">            :param start_times: The list of times at which the :class:`DisturbanceSource` is activated.</span>
+<span class="sd">            :type start_time: list[int]</span>
+
+<span class="sd">            :param stop_times: The list of times at which the :class:`DisturbanceSource` is deactivated.</span>
+<span class="sd">            :type stop_times: list[int]</span>
+
+<span class="sd">            :param enabled: The parameter which determines whether or not the :class:`DisturbanceSource` is active.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">start_times</span><span class="o">=</span><span class="n">start_times</span><span class="p">,</span> <span class="n">stop_times</span><span class="o">=</span><span class="p">[],</span> <span class="n">enabled</span><span class="o">=</span><span class="n">enabled</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_params</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">noisesource</span> <span class="o">=</span> <span class="n">WhiteNoiseSource</span><span class="p">(</span><span class="n">min_val</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParameterDisturbanceSource.step"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.ParameterDisturbanceSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step :class:`ParameterDisturbanceSource` forwards in time. The disturbed controller&#39;s parameters will be disturbed by a random amount, drawn from a uniform distirbution on the interval [-2, 2], whenever the disturbance source is enabled.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the disturbance source over.</span>
+<span class="sd">            :type dt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="c1"># print(self.controller.params)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">params</span><span class="p">)):</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisesource</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+            <span class="c1"># print(self.controller.params)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="ParameterDisturbanceSource.reset"><a class="viewcode-back" href="../../disturbance_sources.html#Sandbox.ParameterDisturbanceSource.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Reset disturbance, so it can be re-used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_params</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

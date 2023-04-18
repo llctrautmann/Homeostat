@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Environments &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sources of noise" href="noise_sources.html" />
+    <link rel="prev" title="Controllers" href="controllers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controllers.html">Controllers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Environments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#arena-class">Arena class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Environments</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/environment.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="environments">
+<h1>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="arena-class">
+<h2>Arena class<a class="headerlink" href="#arena-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.Arena">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">Arena</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.Agent.Agent</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_left</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_right</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_top</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_bottom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena" title="Permalink to this definition">¶</a></dt>
+<dd><div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="images/arena.png"><img alt="Robot in arena" src="images/arena.png" style="width: 600px;" /></a>
+<p class="caption"><span class="caption-text">A robot inside an Arena, which will not allow it to escape.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>A class to represent a rectangular arena, which will confine any agents
+which are inside of its walls and in its list.</p>
+<dl class="py method">
+<dt id="Sandbox.Arena.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="agents.html#Sandbox.Agent" title="Sandbox.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_left</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_right</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_top</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_bottom</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Note: in the current implementation, the code does not check that x_right &gt; x_left and y_top &gt; y_bottom - you have to make sure you get this right yourself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agents</strong> (List of <a class="reference internal" href="agents.html#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>) – List of agents which are confined by the Arena’s walls. Agents must have a radius attribute for Arena to work.</p></li>
+<li><p><strong>x_left</strong> (<em>float</em>) – The x-coordinate of the arena’s left wall.</p></li>
+<li><p><strong>x_right</strong> (<em>float</em>) – The x-coordinate of the arena’s right wall.</p></li>
+<li><p><strong>y_top</strong> (<em>float</em>) – The y-coordinate of the arena’s top wall.</p></li>
+<li><p><strong>y_bottom</strong> (<em>float</em>) – The y-coordinate of the arena’s bottom wall.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Arena.draw">
+<code class="sig-name descname"><span class="pre">draw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to draw an <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> on Matplotlib axes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ax</strong> (<em>Matplotlib axes</em>) – The Matplotlib axes to draw the Arena on.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Arena.draw2">
+<code class="sig-name descname"><span class="pre">draw2</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena.draw2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena.draw2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to draw an <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> on a Matplotlib figure. If there is no figure already open, a new one will be opened. If there is already one or more figure open, then the arena will be drawn on the last one used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Arena.get_data">
+<code class="sig-name descname"><span class="pre">get_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder - not yet implemented.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Arena.line_drawer">
+<code class="sig-name descname"><span class="pre">line_drawer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shiftx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shifty</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena.line_drawer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena.line_drawer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method for drawing a straight line between two points on a PyGame display.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>float</em>) – The x-coordinate of the first point.</p></li>
+<li><p><strong>x2</strong> (<em>float</em>) – The x-coordinate of the second point.</p></li>
+<li><p><strong>y1</strong> (<em>float</em>) – The y-coordinate of the first point.</p></li>
+<li><p><strong>y2</strong> (<em>float</em>) – The y-coordinate of the second point.</p></li>
+<li><p><strong>screen</strong> (<em>PyGame display</em>) – The PyGame display to draw on.</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – The scale to draw at.</p></li>
+<li><p><strong>shiftx</strong> (<em>float</em>) – The offset from centre in the x-axis for drawing.</p></li>
+<li><p><strong>shifty</strong> (<em>float</em>) – The offset from centre in the y-axis for drawing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Arena.move">
+<code class="sig-name descname"><span class="pre">move</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_move</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_move</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method which can be used to move an <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> by the distance specified in the x and y dimensions. This method would normally be called from an <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">step</span></code> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_move</strong> (<em>float</em>) – The distance to move the <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> by in the x-axis.</p></li>
+<li><p><strong>y_move</strong> (<em>float</em>) – The distance to move the <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> by in the y-axis.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Arena.pygame_draw">
+<code class="sig-name descname"><span class="pre">pygame_draw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shiftx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shifty</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena.pygame_draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena.pygame_draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method for drawing an <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> on a PyGame display.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>screen</strong> (<em>PyGame display</em>) – The PyGame display to draw on.</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – The scale to draw at.</p></li>
+<li><p><strong>shiftx</strong> (<em>float</em>) – The offset from centre in the x-axis for drawing.</p></li>
+<li><p><strong>shifty</strong> (<em>float</em>) – The offset from centre in the y-axis for drawing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Arena.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_move</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_move</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Arena.html#Arena.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Arena.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> forwards in time. If any <a class="reference internal" href="agents.html#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a> s in its <code class="docutils literal notranslate"><span class="pre">agents</span></code> list have crossed its walls, they will be pushed back inside.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – The interval of time to integrate the <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> over. Currently unused here.</p></li>
+<li><p><strong>x_move</strong> (<em>float</em>) – The distance to move the <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> by in the x-axis.</p></li>
+<li><p><strong>y_move</strong> (<em>float</em>) – The distance to move the <a class="reference internal" href="#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> by in the y-axis.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="controllers.html" class="btn btn-neutral float-left" title="Controllers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="noise_sources.html" class="btn btn-neutral float-right" title="Sources of noise" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.base &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
+<span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">mtransforms</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="n">pygame</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pygame</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: pygame module not found, visualisations will not be shown. &quot;</span> <span class="o">+</span>
+          <span class="s2">&quot;You should be able to install pygame with:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+          <span class="s2">&quot;     pip install pygame&quot;</span><span class="p">)</span>
+
+<span class="c1">####################################################################################</span>
+<span class="c1">#                           utility functions begin</span>
+<span class="c1">####################################################################################</span>
+
+<span class="c1"># for any two angles, return difference in the interval of [-pi, pi]</span>
+<span class="k">def</span> <span class="nf">angle_difference</span><span class="p">(</span><span class="n">angle1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">angle2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">angle1</span> <span class="o">-</span> <span class="n">angle2</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+        <span class="n">diff</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">diff</span>
+
+<span class="c1"># generate random number from uniform interval</span>
+<span class="c1"># - numpy already has a function for this, but I wrote this and used it in many places before thinking to check that</span>
+<span class="k">def</span> <span class="nf">random_in_interval</span><span class="p">(</span><span class="n">minimum</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maximum</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">maximum</span> <span class="o">-</span> <span class="n">minimum</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span> <span class="o">+</span> <span class="n">minimum</span>
+
+<span class="c1">####################################################################################</span>
+<span class="c1">#                           utility functions end</span>
+<span class="c1">####################################################################################</span>
+<span class="c1">####################################################################################</span>
+<span class="c1">#                           System class begins</span>
+<span class="c1">####################################################################################</span>
+
+<span class="c1"># Conceptually, all entities in the simulation are systems. For this reason,</span>
+<span class="c1"># all other classes inherit from this one.</span>
+<div class="viewcode-block" id="System"><a class="viewcode-back" href="../../systems.html#Sandbox.System">[docs]</a><span class="k">class</span> <span class="nc">System</span><span class="p">:</span>
+    <span class="c1"># construct System. Many systems have xy-coordinates and orientations (theta),</span>
+    <span class="c1"># but for some, such as Controllers and Disturbances, it is not normally useful</span>
+    <span class="c1"># to give them these variables.</span>
+    <span class="c1"># For those systems, has_position and/or has_orientation are set to False.</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Every object in a Sandox simulation is an instance of a subclass of the abstract class :class:`System`. In some cases, this is for conceptual reasons rather than practical ones, e.g. in the case of a :class:`DisturbanceSource`, which certainly can be considered a system but which doesn&#39;t currently inherit anything from :class:`System` (although this may well change in a future implementation).</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="System.__init__"><a class="viewcode-back" href="../../systems.html#Sandbox.System.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(x: float=None, y: float=None, theta: float=None)</span>
+
+<span class="sd">            Construct :class:`System`. If either ``x`` or ``y`` are specified in the call to ``init``, then the system will have position and will keep a history of both its x- and y-coordinates over time. If ``theta`` is specified in the call to ``__init__``, then the system has orientation, and will keep a history of its orientation over time.</span>
+
+<span class="sd">            :param x: The system&#39;s x-coordinate. Defaults to `None`.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The system&#39;s y-coordinate. Defaults to `None`.</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :param theta: The system&#39;s angular orientation. Defaults to `None`. In *Sandbox*, orientations are in radians.</span>
+<span class="sd">            :type theta: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_position</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_position</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_xy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_orientation</span> <span class="o">=</span> <span class="n">theta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_orientation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_theta</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span></div>
+
+    <span class="c1"># systems with position and/or orientation will *need* to call this method,</span>
+    <span class="c1"># from their own step method</span>
+<div class="viewcode-block" id="System.step"><a class="viewcode-back" href="../../systems.html#Sandbox.System.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Step the :class:`System` forwards in time. Subclasses of :class:`System` will generally override this method, to implement class-specific functionality, but they will also need to call this method if they have either position or orientation, as this is where the history of thos variables over time gets updated.</span>
+
+<span class="sd">            :param dt: The interval of time to integrate the system over. Currently unused here, but will often be used in subclasses.</span>
+<span class="sd">            :type dt: float</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_position</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_orientation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thetas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="System.get_data"><a class="viewcode-back" href="../../systems.html#Sandbox.System.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            A function to get the data from a :class:`System`, in the form of a string-keyed dict. If a :class:`System` has position, then its current coordinates plus their histories will be included in the data. If a :class:`System` has orientation, then its current orientation and its orientation history are incuded in the data.</span>
+
+<span class="sd">            These data, as and when they are included in the returned dict, can be accessed with the following keys:</span>
+
+<span class="sd">            * current x-coordinate: ``data[&quot;x&quot;]``</span>
+<span class="sd">            * history of x-coordinates over time: ``data[&quot;xs&quot;]``</span>
+<span class="sd">            * current y-coordinate: ``data[&quot;y&quot;]``</span>
+<span class="sd">            * history of y-coordinates over time: ``data[&quot;ys&quot;]``</span>
+<span class="sd">            * current orientation: ``data[&quot;theta&quot;]``</span>
+<span class="sd">            * history of orientations over time: ``data[&quot;thetas&quot;]``</span>
+
+<span class="sd">            :return: The System&#39;s data.</span>
+<span class="sd">            :rtype: dict</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                                      <span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;xs&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                                      <span class="s2">&quot;ys&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;thetas&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                                      <span class="s2">&quot;classname&quot;</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_position</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;xs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xs</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ys&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ys</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_orientation</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;thetas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetas</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span>
+
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="System.reset"><a class="viewcode-back" href="../../systems.html#Sandbox.System.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Reset :class:`System` to its original state upon its construction, e.g. so that it can be re-used in another simulation run.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_position</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_xy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ys</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_orientation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_theta</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thetas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="System.get_data_and_reset"><a class="viewcode-back" href="../../systems.html#Sandbox.System.get_data_and_reset">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_and_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Reset :class:`System` to its original state and return its data.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="System.init_xy"><a class="viewcode-back" href="../../systems.html#Sandbox.System.init_xy">[docs]</a>    <span class="k">def</span> <span class="nf">init_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Set the systems initial x- and y-coordinates to the passed in values.</span>
+
+<span class="sd">            :param x: The system&#39;s x-coordinate.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The system&#39;s y-coordinate.</span>
+<span class="sd">            :type y: float</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="System.init_theta"><a class="viewcode-back" href="../../systems.html#Sandbox.System.init_theta">[docs]</a>    <span class="k">def</span> <span class="nf">init_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Set the systems initial orientation to the passed in value.</span>
+
+<span class="sd">            :param theta: The system&#39;s orientation.</span>
+<span class="sd">            :type theta: float</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetas</span> <span class="o">=</span> <span class="p">[</span><span class="n">theta</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

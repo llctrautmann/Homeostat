@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Systems &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sources of stimuli and sensors" href="stimuli_sensors.html" />
+    <link rel="prev" title="General information" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">General information</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Systems</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-class">System class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Systems</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/systems.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="systems">
+<h1>Systems<a class="headerlink" href="#systems" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="system-class">
+<h2>System class<a class="headerlink" href="#system-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.System">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">System</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturb_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/System.html#System"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System" title="Permalink to this definition">¶</a></dt>
+<dd><p>Every object in a Sandox simulation is an instance of a subclass of the abstract class <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a>. In some cases, this is for conceptual reasons rather than practical ones, e.g. in the case of a <a class="reference internal" href="disturbance_sources.html#Sandbox.DisturbanceSource" title="Sandbox.DisturbanceSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">DisturbanceSource</span></code></a>, which certainly can be considered a system but which doesn’t currently inherit anything from <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> (although this may well change in a future implementation).</p>
+<dl class="py method">
+<dt id="Sandbox.System.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturb_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/System.html#System.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a>. If either <code class="docutils literal notranslate"><span class="pre">x</span></code> or <code class="docutils literal notranslate"><span class="pre">y</span></code> are specified in the call to <code class="docutils literal notranslate"><span class="pre">init</span></code>, then the system will have position and will keep a history of both its x- and y-coordinates over time. If <code class="docutils literal notranslate"><span class="pre">theta</span></code> is specified in the call to <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, then the system has orientation, and will keep a history of its orientation over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The system’s x-coordinate. Defaults to <cite>None</cite>.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The system’s y-coordinate. Defaults to <cite>None</cite>.</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – The system’s angular orientation. Defaults to <cite>None</cite>. In <em>Sandbox</em>, orientations are in radians.</p></li>
+<li><p><strong>perturb_fun</strong> (<em>function</em>) – A placeholder for a function which can be used to perturb the system’s state. This will  typically be used at the beginning of simulation runs.</p></li>
+<li><p><strong>init_fun</strong> (<em>function</em>) – A placeholder for a function which can be used to set the initial state of the system in each simulation run.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.System.get_data">
+<code class="sig-name descname"><span class="pre">get_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/System.html#System.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to get the data from a <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a>, in the form of a string-keyed dict. If a <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> has position, then its current coordinates plus their histories will be included in the data. If a <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> has orientation, then its current orientation and its orientation history are incuded in the data.</p>
+<p>These data, as and when they are included in the returned dict, can be accessed with the following keys:</p>
+<ul class="simple">
+<li><p>current x-coordinate: <code class="docutils literal notranslate"><span class="pre">data[&quot;x&quot;]</span></code></p></li>
+<li><p>history of x-coordinates over time: <code class="docutils literal notranslate"><span class="pre">data[&quot;xs&quot;]</span></code></p></li>
+<li><p>current y-coordinate: <code class="docutils literal notranslate"><span class="pre">data[&quot;y&quot;]</span></code></p></li>
+<li><p>history of y-coordinates over time: <code class="docutils literal notranslate"><span class="pre">data[&quot;ys&quot;]</span></code></p></li>
+<li><p>current orientation: <code class="docutils literal notranslate"><span class="pre">data[&quot;theta&quot;]</span></code></p></li>
+<li><p>history of orientations over time: <code class="docutils literal notranslate"><span class="pre">data[&quot;thetas&quot;]</span></code></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The System’s data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.System.get_data_and_reset">
+<code class="sig-name descname"><span class="pre">get_data_and_reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/System.html#System.get_data_and_reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.get_data_and_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> to its original state and return its data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.System.init_conditions">
+<code class="sig-name descname"><span class="pre">init_conditions</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/System.html#System.init_conditions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.init_conditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder for a method which can be used to set the system’s initial state. An example of this is: an init_conditions method for a mobile agent defines lists of x, y, and theta values. Every time the agent is simulated, in a set of runs, the next set of x, y, and theta values is used, so that the agent’s position and orientaton are varied in a controlled way.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.System.init_theta">
+<code class="sig-name descname"><span class="pre">init_theta</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/System.html#System.init_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.init_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the systems initial orientation to the passed in value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – The system’s orientation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.System.init_xy">
+<code class="sig-name descname"><span class="pre">init_xy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/System.html#System.init_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.init_xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the systems initial x- and y-coordinates to the passed in values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The system’s x-coordinate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The system’s y-coordinate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.System.perturb">
+<code class="sig-name descname"><span class="pre">perturb</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/System.html#System.perturb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.perturb" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder for a method which can be used to perturb the state of the system. An example of how this might be used is: every time a mobile agent is simulated, in a set of runs, its pose, [x, y, theta], is shifted by some random amount so that it doesn’t always start from exactly the same place or orientation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.System.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/System.html#System.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> to its original state upon its construction, e.g. so that it can be re-used in another simulation run.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.System.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/System.html#System.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.System.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step the <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> forwards in time. Subclasses of <a class="reference internal" href="#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> will generally override this method, to implement class-specific functionality, but they will also need to call this method if they have either position or orientation, as this is where the history of thos variables over time gets updated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – The interval of time to integrate the system over. Currently unused here, but will often be used in subclasses.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="intro.html" class="btn btn-neutral float-left" title="General information" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="stimuli_sensors.html" class="btn btn-neutral float-right" title="Sources of stimuli and sensors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.SimulationRunner &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.SimulationRunner</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.SimulationRunner</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.Simulator</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.Animator</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># how to use:</span>
+<span class="c1">#   create agents, envs, Simulator</span>
+<span class="c1">#   create this</span>
+<span class="c1">#   run this</span>
+
+<div class="viewcode-block" id="SimulationRunner"><a class="viewcode-back" href="../../simulation.html#Sandbox.SimulationRunner">[docs]</a><span class="k">class</span> <span class="nc">SimulationRunner</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class for running a batch of simulations, which may or may not be animated, as required.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SimulationRunner.__init__"><a class="viewcode-back" href="../../simulation.html#Sandbox.SimulationRunner.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">Simulator</span><span class="p">,</span> <span class="n">animate</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">screen_width</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span> <span class="n">pause_ani</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">animation_delay</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">perturb</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(sim: Simulator, animate: bool=False, screen_width: int=700, pause_ani=False, animation_delay: int=0)</span>
+
+<span class="sd">            :param sim: The :class:`Simulator` which will be used (note: future implementations will not need this to be passed in, as it can easily be constructed here).</span>
+<span class="sd">            :type sim: Simulator</span>
+
+<span class="sd">            :param animate: A flag which determines whether or not the simulation runs will be animated. Note: if this is set to ``False``, then no :class:`Animator` will be constructed, so it cannot be changed during simulation runs. When this flag is set to ``True``, the :class:`Animator` is constructed, and you can the choose to use it, or skip it, using its controls.</span>
+<span class="sd">            :type animate: bool</span>
+
+<span class="sd">            :param screen_width: The PyGame display height and width, in pixels.</span>
+<span class="sd">            :type screen_width: int</span>
+
+<span class="sd">            :param pause_ani: If this flag is set to ``True`` (which is it by default), and simulation runs are being animated, then animations will always begin in the paused state.</span>
+<span class="sd">            :type pause_ani: bool</span>
+
+<span class="sd">            :param delay: The number of 10s of milliseconds to delay the animation by, when one is used, inbetween each pair of successive simulation steps. Can be used to slow an animation/simulation down in order to see what is happening more clearly.</span>
+<span class="sd">            :type delay: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim</span> <span class="o">=</span> <span class="n">sim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animate</span> <span class="o">=</span> <span class="n">animate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ani</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pause_ani</span> <span class="o">=</span> <span class="n">pause_ani</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">animate</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ani</span> <span class="o">=</span> <span class="n">Animator</span><span class="p">(</span><span class="n">systems</span><span class="o">=</span><span class="n">sim</span><span class="o">.</span><span class="n">get_systems</span><span class="p">(),</span> <span class="n">screen_width</span><span class="o">=</span><span class="n">screen_width</span><span class="p">,</span> <span class="n">paused</span><span class="o">=</span><span class="n">pause_ani</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="n">animation_delay</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perturb</span> <span class="o">=</span> <span class="n">perturb</span></div>
+
+<div class="viewcode-block" id="SimulationRunner.run_sims"><a class="viewcode-back" href="../../simulation.html#Sandbox.SimulationRunner.run_sims">[docs]</a>    <span class="k">def</span> <span class="nf">run_sims</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param n: The number of simulation runs to execute.</span>
+<span class="sd">            :type n: int</span>
+
+<span class="sd">            :return: The data from all simulation runs, in a list of data dicts, as returned from :meth:`Sandbox.Simulator.get_data`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># run set of simulations</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="o">.</span><span class="n">animate_current</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">perturb</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">perturb</span><span class="p">()</span>
+
+            <span class="n">run_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_once</span><span class="p">()</span>
+            <span class="n">run_data</span><span class="p">[</span><span class="s2">&quot;run_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_data</span><span class="p">)</span>
+
+        <span class="c1"># shutdown animator</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="SimulationRunner.run_once"><a class="viewcode-back" href="../../simulation.html#Sandbox.SimulationRunner.run_once">[docs]</a>    <span class="k">def</span> <span class="nf">run_once</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to run, and animate, a single simulation run.</span>
+
+<span class="sd">            :return: Data from the simulation run, as returned from :meth:`Sandbox.Simulator.get_data`</span>
+<span class="sd">            :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="o">.</span><span class="n">paused</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pause_ani</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">run_completed</span><span class="p">:</span>
+            <span class="c1"># step simulation once</span>
+            <span class="c1"># if simulation returns quit, tell animator to close window, and then return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">step_forwards</span><span class="p">():</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                <span class="k">return</span>
+
+            <span class="c1"># step animation once, and then</span>
+            <span class="c1"># continue to step if it is paused</span>
+            <span class="c1"># if animation returns quit, then return</span>
+
+            <span class="c1"># if Animator exists</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="p">:</span>
+                <span class="c1"># begin with animate=True</span>
+                <span class="c1"># - if the animation gets paused, then we continue to redraw,</span>
+                <span class="c1">#   as that is the only way keyboard commands will be captured</span>
+                <span class="n">animate</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">while</span> <span class="n">animate</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="o">.</span><span class="n">animate_any</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="o">.</span><span class="n">animate_current</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">run_completed</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">run_completed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="o">.</span><span class="n">draw_frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+                    <span class="c1"># if the anmiation is not paused, then animate=False and we</span>
+                    <span class="c1"># will exit this while loop</span>
+                    <span class="n">animate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ani</span><span class="o">.</span><span class="n">paused</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

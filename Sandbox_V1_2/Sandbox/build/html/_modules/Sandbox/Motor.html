@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.Motor &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.Motor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.Motor</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.noise</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># a class to represent a motor for a differential drive robot</span>
+<span class="c1"># - having a class for making motor objects makes it easy to apply motor noise</span>
+<span class="c1"># and other disturbances to the robot&#39;s motors</span>
+<div class="viewcode-block" id="Motor"><a class="viewcode-back" href="../../actuators.html#Sandbox.Motor">[docs]</a><span class="k">class</span> <span class="nc">Motor</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class representing a motor. A motor has a maximum speed at which it will turn in either the forwards or backwards direction. Positive motor speeds results in forwards motion, and negative speeds result in backwards direction. This relationship can be reversed by setting the robot&#39;s ``reversed`` parameter to ``True``. A motor can also have inertia, which is the motor&#39;s resistance to changes of speed. If the inertia is set to 0, then the motor can change speed instantaneously. See the figure below for examples of how motors can behave with different combinations of maximum speed and inertia.</span>
+
+<span class="sd">        .. figure:: images/Motor.svg</span>
+<span class="sd">          :width: 400</span>
+<span class="sd">          :align: center</span>
+<span class="sd">          :alt: Motor examples</span>
+
+<span class="sd">          In the figure, the response of three different motors to a constant command of 20 is shown. Motor 1 has max_speed = 10, motor_inertia_coeff = 100. Motor 2 has max_speed = 40, motor_inertia_coeff = 50. Motor 3 has max_speed = 10, motor_inertia_coeff = 0. Motor 3 changes speed to the commanded valuse in a simgle time step. The speeds of motors 1 and 3 both saturate at their maximum speed value, which is less than the commanded value. The speed of motor 2 changes most slowly, as it has the highest inertia.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct Motor</span>
+    <span class="c1"># - a robot has a maximum speed. controller inputs which are larger than this</span>
+    <span class="c1"># will saturate at the max</span>
+    <span class="c1"># - the motor inertia coefficient determines how quickly the motor can change its speed</span>
+    <span class="c1">#       - if the inertia is 0, then the motor can change speed instantaneously</span>
+    <span class="c1">#           to any new control input</span>
+    <span class="c1">#       - if the inertia is greater than 0, then the speed may change slowly,</span>
+    <span class="c1">#       - negative inertia values will be ignored</span>
+    <span class="c1"># - a motor can be reversed, so that forwards becomes backwards and vice versa</span>
+<div class="viewcode-block" id="Motor.__init__"><a class="viewcode-back" href="../../actuators.html#Sandbox.Motor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">motor_inertia_coeff</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">reversed</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">noisemaker</span><span class="p">:</span> <span class="n">NoiseSource</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(max_speed: float, motor_inertia_coeff: float=0, reversed: bool=False, noisemaker: NoiseSource=None)</span>
+
+
+<span class="sd">            :param max_speed: The maximum speed the motor can run at. Negative values will be converted to positive ones when they are copied to the motor&#39;s attributes.</span>
+<span class="sd">            :type max_speed: float</span>
+
+<span class="sd">            :param motor_inertia_coeff: A parameter used to determine how quickly the motor&#39;s speed can change. Defaults to 0, in which case the motor can change speed instantaneously.</span>
+<span class="sd">            :type motor_inertia_coeff: float</span>
+
+<span class="sd">            :param reversed: A parameter which determines whether the motor runs in the forwards or reverse direction. Defaults to False, in which case the motor runs forwards.</span>
+<span class="sd">            :type reversed: bool</span>
+
+<span class="sd">            :param noisemaker: A :class:`NoiseSource` object, to generate noise which is added to the motor&#39;s actual speed.</span>
+<span class="sd">            :type noisemaker: :class:`NoiseSource`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># motors can have noise sources attached to them</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span> <span class="o">=</span> <span class="n">noisemaker</span>
+        <span class="c1"># current speed and history of speed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speeds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+
+        <span class="c1"># system parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motor_inertia_coeff</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">motor_inertia_coeff</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1"># limits rate of change of speed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_motor_inertia_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_inertia_coeff</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_speed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_max_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_speed</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="o">=</span> <span class="nb">reversed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverseds</span> <span class="o">=</span> <span class="p">[</span><span class="nb">reversed</span><span class="p">]</span></div>
+
+    <span class="c1"># step motor forwards in time</span>
+<div class="viewcode-block" id="Motor.step"><a class="viewcode-back" href="../../actuators.html#Sandbox.Motor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed_command</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Function to step motor forward in time.</span>
+
+<span class="sd">            :param speed_command: New speed command</span>
+<span class="sd">            :type speed_command: float</span>
+
+<span class="sd">            :param dt: Integration interval</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :return: Motor speed after stepping</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if motor is reversed, then reverse the control input</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span><span class="p">:</span>
+            <span class="n">speed_command</span> <span class="o">=</span> <span class="o">-</span><span class="n">speed_command</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverseds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reversed</span><span class="p">)</span>
+
+        <span class="c1"># calculate speed change</span>
+        <span class="n">speed_change</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_inertia_coeff</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">speed_command</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span> <span class="c1"># * dt</span>
+
+        <span class="c1"># change speed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">+=</span> <span class="n">speed_change</span>
+
+        <span class="c1"># apply noise</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+        <span class="c1"># constrain motor speed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_speed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">max_speed</span><span class="p">)</span>
+
+        <span class="c1"># keep record of speed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speeds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+
+        <span class="c1"># return speed</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span></div>
+
+<div class="viewcode-block" id="Motor.reset"><a class="viewcode-back" href="../../actuators.html#Sandbox.Motor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A function to reset a motor to its initial state. Resets max_speed, motor_inertia_coeff, speed, history of speeds, reversed, and history of reverseds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speeds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speeds</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverseds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverseds</span> <span class="o">=</span> <span class="p">[</span><span class="nb">reversed</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_max_speed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motor_inertia_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_motor_inertia_coeff</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Motor.get_data"><a class="viewcode-back" href="../../actuators.html#Sandbox.Motor.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A function to get a motor&#39;s data. Returns the motors histories of speed, motor direction (based on &quot;reversed&quot; variable), and any noise which has been applied to the motor speed.</span>
+
+<span class="sd">            :return: Motor&#39;s data.</span>
+<span class="sd">            :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;speeds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">speeds</span><span class="p">,</span> <span class="s2">&quot;reverseds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverseds</span><span class="p">,</span> <span class="s2">&quot;noises&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;noises&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="o">.</span><span class="n">get_data</span><span class="p">()[</span><span class="s2">&quot;noises&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">data</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

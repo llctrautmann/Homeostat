@@ -1,0 +1,44 @@
+test reset for all classes
+
+test getData for all classes
+
+test methods like push for all agents?
+
+test __init__ works for valid inputs and does not work for invalid ones
+
+==============================
+
+
+Progress
+========
+
+Some unit tests done for:
+
+Agent
+Animator
+Arena
+Motor
+System
+Controller
+stimuli
+
+
+Partial tests done for:
+
+noise - not urgent? - can be seen to be working?
+
+sensors
+
+Other priority unit tests:
+
+
+
+Lower priority unit tests:
+
+Ant
+Bee
+Robot
+BraitenbergController
+Simulator
+SimulationRunner
+DisturbanceSource - unit tests not urgent, as no data is saved, and effect of disturbance is easy to see

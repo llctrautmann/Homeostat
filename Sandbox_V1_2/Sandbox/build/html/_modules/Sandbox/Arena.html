@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.Arena &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.Arena</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.Arena</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.Agent</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># a class to represent a rectangular arena, which will constrain the</span>
+<span class="c1"># position of agents inside of it</span>
+<span class="c1"># - this class relies on agents having a radius attribute</span>
+
+ <span class="c1"># Should this inherit from System, and possible some intermediary Env class?</span>
+
+<div class="viewcode-block" id="Arena"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena">[docs]</a><span class="k">class</span> <span class="nc">Arena</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. figure:: images/arena.png</span>
+<span class="sd">          :width: 600</span>
+<span class="sd">          :align: center</span>
+<span class="sd">          :alt: Robot in arena</span>
+
+<span class="sd">          A robot inside an Arena, which will not allow it to escape.</span>
+
+<span class="sd">        A class to represent a rectangular arena, which will confine any agents</span>
+<span class="sd">        which are inside of its walls and in its list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct Arena with a list of agents to constrain and coordinates of walls</span>
+<div class="viewcode-block" id="Arena.__init__"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Agent</span><span class="p">],</span> <span class="n">x_left</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x_right</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y_top</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y_bottom</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(agents: List[Agent], x_left: float, x_right: float, y_top: float, y_bottom: float)</span>
+
+<span class="sd">            Note: in the current implementation, the code does not check that x_right &gt; x_left and y_top &gt; y_bottom - you have to make sure you get this right yourself.</span>
+
+<span class="sd">            :param agents: List of agents which are confined by the Arena&#39;s walls. Agents must have a radius attribute for Arena to work.</span>
+<span class="sd">            :type agents: List of :class:`Agent`</span>
+
+<span class="sd">            :param x_left: The x-coordinate of the arena&#39;s left wall.</span>
+<span class="sd">            :type x_left: float</span>
+
+<span class="sd">            :param x_right: The x-coordinate of the arena&#39;s right wall.</span>
+<span class="sd">            :type x_right: float</span>
+
+<span class="sd">            :param y_top: The y-coordinate of the arena&#39;s top wall.</span>
+<span class="sd">            :type y_top: float</span>
+
+<span class="sd">            :param y_bottom: The y-coordinate of the arena&#39;s bottom wall.</span>
+<span class="sd">            :type y_bottom: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># call System constructor</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># set attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">agents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span> <span class="o">=</span> <span class="n">x_left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span> <span class="o">=</span> <span class="n">x_right</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span> <span class="o">=</span> <span class="n">y_top</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span> <span class="o">=</span> <span class="n">y_bottom</span></div>
+
+    <span class="c1"># step arena</span>
+<div class="viewcode-block" id="Arena.step"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x_move</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_move</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step :class:`Arena` forwards in time. If any :class:`Agent` s in its ``agents`` list have crossed its walls, they will be pushed back inside.</span>
+
+<span class="sd">            :param dt: The interval of time to integrate the :class:`Arena` over. Currently unused here.</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :param x_move: The distance to move the :class:`Arena` by in the x-axis.</span>
+<span class="sd">            :type x_move: float</span>
+
+<span class="sd">            :param y_move: The distance to move the :class:`Arena` by in the y-axis.</span>
+<span class="sd">            :type y_move: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if move parameters are passed to step, then shift the arena</span>
+        <span class="k">if</span> <span class="n">x_move</span> <span class="ow">and</span> <span class="n">y_move</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">x_move</span><span class="p">,</span> <span class="n">y_move</span><span class="p">)</span>
+        <span class="c1"># call step of System, so that new xy-coordinates are stored</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+        <span class="c1"># for all agents, constrain them to remain inside the box</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="c1"># constrain in y</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">agent</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">:</span>
+                <span class="c1"># agent.y = self.y_top - agent.radius</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y_top</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">:</span>
+                <span class="c1"># agent.y = self.y_bottom + agent.radius</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span> <span class="o">+</span> <span class="n">agent</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
+            <span class="c1"># constrain in x</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">agent</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">:</span>
+                <span class="c1"># agent.x = self.x_right - agent.radius</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x_right</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">:</span>
+                <span class="c1"># agent.x = self.x_left + agent.radius</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x_left</span> <span class="o">+</span> <span class="n">agent</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span></div>
+            <span class="c1"># agent.update_children_positions()</span>
+
+    <span class="c1"># move (translate) arena by specifed increments</span>
+<div class="viewcode-block" id="Arena.move"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_move</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y_move</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method which can be used to move an :class:`Arena` by the distance specified in the x and y dimensions. This method would normally be called from an :class:`Arena`&#39;s ``step`` method.</span>
+
+<span class="sd">            :param x_move: The distance to move the :class:`Arena` by in the x-axis.</span>
+<span class="sd">            :type x_move: float</span>
+
+<span class="sd">            :param y_move: The distance to move the :class:`Arena` by in the y-axis.</span>
+<span class="sd">            :type y_move: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">x_move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">y_move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span> <span class="o">+=</span> <span class="n">x_move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span> <span class="o">+=</span> <span class="n">x_move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span> <span class="o">+=</span> <span class="n">y_move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span> <span class="o">+=</span> <span class="n">y_move</span></div>
+
+    <span class="c1"># draw arena in the specified matplotlib axes</span>
+<div class="viewcode-block" id="Arena.draw"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to draw an :class:`Arena` on Matplotlib axes.</span>
+
+<span class="sd">            :param ax: The Matplotlib axes to draw the Arena on.</span>
+<span class="sd">            :type ax: Matplotlib axes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">],</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+
+    <span class="c1"># draw arena in whichever matplotlib plot was last used, or</span>
+    <span class="c1"># a new window if there aren&#39;t any open</span>
+<div class="viewcode-block" id="Arena.draw2"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena.draw2">[docs]</a>    <span class="k">def</span> <span class="nf">draw2</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to draw an :class:`Arena` on a Matplotlib figure. If there is no figure already open, a new one will be opened. If there is already one or more figure open, then the arena will be drawn on the last one used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">],</span>
+                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span></div>
+
+    <span class="c1"># draw arena in a pygame display</span>
+<div class="viewcode-block" id="Arena.pygame_draw"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena.pygame_draw">[docs]</a>    <span class="k">def</span> <span class="nf">pygame_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shifty</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method for drawing an :class:`Arena` on a PyGame display.</span>
+
+<span class="sd">            :param screen: The PyGame display to draw on.</span>
+<span class="sd">            :type screen: PyGame display</span>
+
+<span class="sd">            :param scale: The scale to draw at.</span>
+<span class="sd">            :type scale: float</span>
+
+<span class="sd">            :param shiftx: The offset from centre in the x-axis for drawing.</span>
+<span class="sd">            :type shiftx: float</span>
+
+<span class="sd">            :param shifty: The offset from centre in the y-axis for drawing.</span>
+<span class="sd">            :type shifty: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_drawer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">,</span>
+                         <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">shifty</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_drawer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">,</span>
+                         <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">shifty</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_drawer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">,</span>
+                      <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">shifty</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_drawer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_bottom</span><span class="p">,</span>
+                         <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">shifty</span><span class="p">)</span></div>
+
+    <span class="c1"># THIS METHOD DUPLICATES CODE FROM pygame_functions?</span>
+
+    <span class="c1"># a function for drawing a line in the pygame window</span>
+<div class="viewcode-block" id="Arena.line_drawer"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena.line_drawer">[docs]</a>    <span class="k">def</span> <span class="nf">line_drawer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shifty</span><span class="p">:</span><span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method for drawing a straight line between two points on a PyGame display.</span>
+
+<span class="sd">            :param x1: The x-coordinate of the first point.</span>
+<span class="sd">            :type x1: float</span>
+
+<span class="sd">            :param x2: The x-coordinate of the second point.</span>
+<span class="sd">            :type x2: float</span>
+
+<span class="sd">            :param y1: The y-coordinate of the first point.</span>
+<span class="sd">            :type y1: float</span>
+
+<span class="sd">            :param y2: The y-coordinate of the second point.</span>
+<span class="sd">            :type y2: float</span>
+
+<span class="sd">            :param screen: The PyGame display to draw on.</span>
+<span class="sd">            :type screen: PyGame display</span>
+
+<span class="sd">            :param scale: The scale to draw at.</span>
+<span class="sd">            :type scale: float</span>
+
+<span class="sd">            :param shiftx: The offset from centre in the x-axis for drawing.</span>
+<span class="sd">            :type shiftx: float</span>
+
+<span class="sd">            :param shifty: The offset from centre in the y-axis for drawing.</span>
+<span class="sd">            :type shifty: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span>
+                         <span class="n">start_pos</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">shifty</span><span class="p">),</span>
+                         <span class="n">end_pos</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">+</span> <span class="n">shifty</span><span class="p">),</span>
+                         <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Arena.get_data"><a class="viewcode-back" href="../../environment.html#Sandbox.Arena.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A placeholder - not yet implemented.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;dummy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">]}</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

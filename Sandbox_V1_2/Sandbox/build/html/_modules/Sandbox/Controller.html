@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.Controller &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.Controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.Controller</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.System</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.noise</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">cp</span>
+
+<div class="viewcode-block" id="Controller"><a class="viewcode-back" href="../../controllers.html#Sandbox.Controller">[docs]</a><span class="k">class</span> <span class="nc">Controller</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class represents a controller for an :class:`Agent`.</span>
+<span class="sd">        There are two routes to customising :class:`Controller` or one of its subclasses:</span>
+
+<span class="sd">        #. Using ``step_fun(dt, inputs, params, state)``. ``step_fun`` is a function which can be written anywhere in the code for your experiment and passed to a :class:`Controller` when it is constructed. This will only work for relatively simple controllers.</span>
+<span class="sd">        #. By creating a subclass of :class:`Controller`, like :class:`BraitenbergController`, where you can add any attributes you need to by writing a new __init__ method (which should call ``super().__init__``, so that attributes from :class:`Controller` are inherited and set up correctly). In some cases, you may also need to override the step method of :class:`Controller` (possibly using ``super().step`` to inherit existing functionality), and to add other methods to the class.</span>
+
+<span class="sd">        If you want to create a self-adaptive controller, then you can either create a subclass of :class:`Controller` or - for relatively simple cases - you can implement an ``adapt_fun(dt, inputs_hist, commands_hist, params_hist)`` function and pass it into a :class:`Controller` when it is constructed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct Controller</span>
+<div class="viewcode-block" id="Controller.__init__"><a class="viewcode-back" href="../../controllers.html#Sandbox.Controller.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs_n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                       <span class="n">commands_n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                       <span class="n">step_fun</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">noisemakers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">NoiseSource</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noisemakers_inds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">adapt_fun</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">adapt_enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                       <span class="n">test_interval</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        __init__(inputs_n: int, commands_n: int, step_fun: Callable[[float, List[float], List[float], List[float]], List[float]], noisemakers: List[NoiseSource]=None, noisemakers_inds=None, params: List[float]=None, adapt_fun: Callable[[List[float], List[float], List[float]], None]=None, adapt_enabled: bool=True, test_interval: float=0)</span>
+
+<span class="sd">            :param inputs_n: The number of inputs expected by the controller.</span>
+<span class="sd">            :type inputs_n: int</span>
+
+<span class="sd">            :param commands_n: The number of outputs (commands) that the controller is expected to return from its ``step`` method.</span>
+<span class="sd">            :type commands_n: int</span>
+
+<span class="sd">            :param step_fun: The function which will be used to generate the controller&#39;s outputs, given the inputs to the controller&#39;s ``step`` method, the interval of time to integrate over, and any state and parameters the controller makes use of.</span>
+<span class="sd">            :type step_fun: function</span>
+
+<span class="sd">            :param noisemakers: A list of noise sources which will potentially affect the commands the controller outputs.</span>
+<span class="sd">            :type noisemakers: List of NoiseSource objects.</span>
+
+<span class="sd">            :param noisemaker_inds: A list of indices of commands which will potentially have noise added to them. Any indices which are out of range in either the list of noisemakers or commands will be ignored.</span>
+<span class="sd">            :type noisemaker_inds: List of integers.</span>
+
+<span class="sd">            :param params: A list of parameters used by the controller. These parameters will be used in the controller&#39;s ``step_fun`` function, which will be caused from the controller&#39;s ``step`` method.</span>
+<span class="sd">            :type params: list of floats.</span>
+
+<span class="sd">            :param adapt_fun: A function wich can be used to adapt a controller, by changing its parameters. It only has access to the same data that the controller does: its histories of inputs, outputs, and parameter values.</span>
+<span class="sd">            :type adapt_fun: function</span>
+
+<span class="sd">            :param adapt_enabled: When a :class:`Controller` has an ``adapt_fun``, that function will only be used when ``adapt_enabled`` is set to True.</span>
+<span class="sd">            :type adapt_enabled: bool</span>
+
+<span class="sd">            :param test_interval: The period of time to wait between parameter changes, if an adapt_fun is being used.</span>
+<span class="sd">            :type test_interval: float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># call System init</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># attributes which are assumed not to change</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers</span> <span class="o">=</span> <span class="n">noisemakers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers_inds</span> <span class="o">=</span> <span class="n">noisemakers_inds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_fun</span> <span class="o">=</span> <span class="n">step_fun</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapt_fun</span> <span class="o">=</span> <span class="n">adapt_fun</span>
+
+        <span class="c1"># attributes which may change have initial values saved so that the</span>
+        <span class="c1"># controller can  be reset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs_hist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="n">inputs_n</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_inputs_hist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs_hist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_inputs_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_hist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="n">commands_n</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_commands_hist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands_hist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_commands_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_hist</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_hist</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
+        <span class="c1"># if self.params:</span>
+        <span class="c1">#     params_n = len(params)</span>
+        <span class="c1">#     self.params_hist: List[List[float]] = [[0.] * params_n]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_interval</span> <span class="o">=</span> <span class="n">test_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adapt_enabled</span> <span class="o">=</span> <span class="n">adapt_enabled</span></div>
+
+<div class="viewcode-block" id="Controller.reset"><a class="viewcode-back" href="../../controllers.html#Sandbox.Controller.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to reset the controller to its initial state, so that it can be reused without the data and states from a previous simulation run affecting the next run.</span>
+
+<span class="sd">            You will typically want to get the controller&#39;s data before resetting it, e.g. so that you can store if for the purposes of analysis. The most convenient way to do this will often be to call the ``get_data_and_reset`` method defined in the :class:`System` class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs_hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_inputs_hist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_hist</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_commands_hist</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_hist</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">noisemaker</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers</span><span class="p">:</span>
+                <span class="n">noisemaker</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Controller.get_data"><a class="viewcode-back" href="../../controllers.html#Sandbox.Controller.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method for getting the simulation run data from a Controller.</span>
+
+<span class="sd">            :return: A dict containing the Controller&#39;s parameters and recorded data, including the data of any NoiseSources which are attached to the controller.</span>
+<span class="sd">            :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># inputs_hist is not returned, as those data are assumed to be sensor</span>
+        <span class="c1"># activations which are stored by the sensors</span>
+        <span class="n">noises</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers</span><span class="p">:</span>
+            <span class="n">noises</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">noisemaker</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers</span><span class="p">:</span>
+                <span class="n">noises</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">noisemaker</span><span class="o">.</span><span class="n">get_data</span><span class="p">()[</span><span class="s2">&quot;noises&quot;</span><span class="p">])</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;commands_hist&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands_hist</span><span class="p">,</span>
+                <span class="s2">&quot;noisemakers_inds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers_inds</span><span class="p">,</span>
+                <span class="s2">&quot;noises&quot;</span><span class="p">:</span> <span class="n">noises</span><span class="p">,</span>
+                <span class="s2">&quot;params_hist&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_hist</span><span class="p">,</span>
+                <span class="s2">&quot;inputs_hist&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs_hist</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="Controller.step"><a class="viewcode-back" href="../../controllers.html#Sandbox.Controller.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">state</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="p">[])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to step a controller forwards in time.</span>
+
+<span class="sd">            :param dt: The interval of time to integrate the controller over.</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :param inputs: The inputs to the controller.</span>
+<span class="sd">            :type inputs: list of floats</span>
+
+<span class="sd">            :param state: This variable can be used to pass in information about an agent&#39;s state (e.g. for a robot this could be [x, y, theta]). NOTE: even though I have included this shortcut, its use should normally be avoided - strictly speaking, an agent should use its sensors to estimate its state, and then pass its estimates to its controller in ``inputs``.</span>
+<span class="sd">            :type state: list of floats</span>
+
+<span class="sd">            :return: List of commands.</span>
+<span class="sd">            :rtype: list of floats.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>  <span class="c1"># increment time variable by simulation step size</span>
+
+        <span class="c1"># store new inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="c1"># adapt params</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt_fun</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt_enabled</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_interval</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt_fun</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs_hist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands_hist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_hist</span><span class="p">)</span>
+
+        <span class="c1"># store new params</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">))</span>
+
+        <span class="c1"># get commands</span>
+        <span class="n">commands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_fun</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+        <span class="c1"># add noise to commands</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers_inds</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers_inds</span><span class="p">:</span>
+                <span class="c1"># check that there is a noisemaker and a command at the given index in each list</span>
+                <span class="k">if</span> <span class="n">ind</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noisemakers</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ind</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">commands</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers</span><span class="p">[</span><span class="n">ind</span><span class="p">]:</span> <span class="c1"># THIS IS REDUNDANT????????????</span>
+                        <span class="n">commands</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemakers</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+        <span class="c1"># store new commands</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">commands</span><span class="p">)</span>
+
+        <span class="c1"># return commands</span>
+        <span class="k">return</span> <span class="n">commands</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

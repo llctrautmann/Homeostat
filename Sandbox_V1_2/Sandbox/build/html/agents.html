@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agents &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Actuators" href="actuators.html" />
+    <link rel="prev" title="Sources of stimuli and sensors" href="stimuli_sensors.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Agents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#agent-class">Agent class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#robot-class">Robot class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Agents</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/agents.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="agents">
+<h1>Agents<a class="headerlink" href="#agents" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="agent-class">
+<h2>Agent class<a class="headerlink" href="#agent-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.Agent">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">Agent</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.stimuli.LightSource</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Agent.html#Agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>An <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a> is an abstract subclass of <a class="reference internal" href="systems.html#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a>. Classes which represent specific types of mobile agents, e.g. <a class="reference internal" href="#Sandbox.Robot" title="Sandbox.Robot"><code class="xref py py-class docutils literal notranslate"><span class="pre">Robot</span></code></a> are subclasses of <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>.</p>
+<p>An <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a> is a mobile <a class="reference internal" href="systems.html#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> with position and orientation. It is expected that an <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a> will have sensors, a controller, and some way of moving through its environment.</p>
+<p>When you subclass <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>, you will need to implement the following methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">step_sensors(dt)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control(activations,</span> <span class="pre">dt)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step_actuators(speed_commands,</span> <span class="pre">dt)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">integrate(actual_speeds,</span> <span class="pre">dt)</span></code></p></li>
+<li><p>and <code class="docutils literal notranslate"><span class="pre">update_children_positions()</span></code></p></li>
+<li><p>as well as <code class="docutils literal notranslate"><span class="pre">pygame_draw(self,</span> <span class="pre">screen,</span> <span class="pre">scale:</span> <span class="pre">float,</span> <span class="pre">shiftx:</span> <span class="pre">float,</span> <span class="pre">shifty:</span> <span class="pre">float)</span></code>, if you are going to animate your simulation</p></li>
+</ul>
+<p>These methods split up the <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>’s side of its sensorimotor loop. The main reason for splitting them up is to make it easier to subclass agent implementations. For example, to add sensors to an existing <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a> subclass, you would only need to override <code class="docutils literal notranslate"><span class="pre">step_sensors</span></code> and <code class="docutils literal notranslate"><span class="pre">control</span></code> - <code class="docutils literal notranslate"><span class="pre">step_actuators</span></code> and <code class="docutils literal notranslate"><span class="pre">integrate</span></code> don’t need to be touched. Another example would be if you wanted to change the dynamics of motion when subclassing an existing <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a> - it may only be necessary to override the <code class="docutils literal notranslate"><span class="pre">integrate</span></code> method, and leave the other methods as they are.</p>
+<dl class="py method">
+<dt id="Sandbox.Agent.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSource" title="Sandbox.LightSource"><span class="pre">LightSource</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Agent.html#Agent.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Agent.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>’s initial x-coordinate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>’s initial y-coordinate.</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – The <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>’s initial orientation.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – The radius of the <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>’s body.</p></li>
+<li><p><strong>colour</strong> (<em>str</em>) – The colour of the <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>’s body.</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSource" title="Sandbox.LightSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">LightSource</span></code></a>) – The <a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSource" title="Sandbox.LightSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">LightSource</span></code></a> attached to the <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>’s body.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Agent.push">
+<code class="sig-name descname"><span class="pre">push</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Agent.html#Agent.push"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Agent.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method used to “push” an <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a> to a new position and orientation. The agent can be pushed in any single axis (x, y, rotation) or any combination of those axes.</p>
+<p>This method is here for environmental interactions such as those between an <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a> and an <a class="reference internal" href="environment.html#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a>. The <a class="reference internal" href="environment.html#Sandbox.Arena" title="Sandbox.Arena"><code class="xref py py-class docutils literal notranslate"><span class="pre">Arena</span></code></a> takes care of watching for collisions between agents and its walls, and when it detects one, it pushes the colliding agent back inside, using this method. It is important that this method is used, rather than just directly changing the agent’s <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">theta</span></code> attributes, as this method will also update the states of attached systems, such as sensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The x-coordinate to push the agent to. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case the agent’s x-coordinate will be unchanged.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The y-coordinate to push the agent to. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case the agent’s y-coordinate will be unchanged.</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – The orientation to push the agent to. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case the agent’s orientation will be unchanged.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Agent.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Agent.html#Agent.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Agent.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step the agent forwards in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Interval of time to integrate the noise source over - not currently used here, although it typically will be in the step methods of an <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>’s subclasses.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="robot-class">
+<h2>Robot class<a class="headerlink" href="#robot-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.Robot">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">Robot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Sandbox.Controller.Controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensors</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.sensors.LightSensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_angles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_motor_max_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_motor_max_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_motor_inertia</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_motor_inertia</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_motor_noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.noise.NoiseSource</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_motor_noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.noise.NoiseSource</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_motor_reversed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_motor_reversed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'darkblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.stimuli.LightSource</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#Sandbox.Robot" title="Sandbox.Robot"><code class="xref py py-class docutils literal notranslate"><span class="pre">Robot</span></code></a> is a subclass of <a class="reference internal" href="#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>, and represents a mobile robot with a differential drive, i.e. two motors, on either side of its body, which can be driven at different speeds. A <a class="reference internal" href="#Sandbox.Robot" title="Sandbox.Robot"><code class="xref py py-class docutils literal notranslate"><span class="pre">Robot</span></code></a> can have an arbitrary number of <a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSensor" title="Sandbox.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">LightSensor</span></code></a> objects. It can also have a <a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSource" title="Sandbox.LightSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">LightSource</span></code></a> attached to its body, so that it can be seen by other agents with light sensors.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="images/Robot.png"><img alt="Robot, as drawn in Matplotlib" src="images/Robot.png" style="width: 600px;" /></a>
+<p class="caption"><span class="caption-text">A <a class="reference internal" href="#Sandbox.Robot" title="Sandbox.Robot"><code class="xref py py-class docutils literal notranslate"><span class="pre">Robot</span></code></a>, as drawn in Matplotlib. While this example has two light sensors, much like Braitenberg’s simpler vehicles, a <a class="reference internal" href="#Sandbox.Robot" title="Sandbox.Robot"><code class="xref py py-class docutils literal notranslate"><span class="pre">Robot</span></code></a> can have an arbitrary number of sensors.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<dl class="py method">
+<dt id="Sandbox.Robot.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="controllers.html#Sandbox.Controller" title="Sandbox.Controller"><span class="pre">Controller</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensors</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSensor" title="Sandbox.LightSensor"><span class="pre">LightSensor</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_angles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_motor_max_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_motor_max_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_motor_inertia</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_motor_inertia</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_motor_noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><span class="pre">NoiseSource</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_motor_noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><span class="pre">NoiseSource</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_motor_reversed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_motor_reversed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'darkblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSource" title="Sandbox.LightSource"><span class="pre">LightSource</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – Robot’s initial x-coordinate</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Robot’s initial y-coordinate</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – Robot’s initial orientation, in radians. Defaults to <code class="docutils literal notranslate"><span class="pre">0.0</span></code></p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Radius of robot’s body. Defaults to <code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></li>
+<li><p><strong>controller</strong> (Instance of subclass of <a class="reference internal" href="controllers.html#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a>) – Robot’s controller system</p></li>
+<li><p><strong>sensors</strong> (List of instances of subclasses of <a class="reference internal" href="stimuli_sensors.html#Sandbox.Sensor" title="Sandbox.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sensor</span></code></a> The subclass will typically be <a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSensor" title="Sandbox.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">LightSensor</span></code></a> , but it can be others as long as their step methods have the same inputs/output) – List of robot’s sensor systems</p></li>
+<li><p><strong>sensor_angles</strong> (<em>List of floats</em>) – List of the angles corresponding to the list of sensors</p></li>
+<li><p><strong>left_motor_max_speed</strong> (<em>float</em>) – Maximum speed (magnitude) of robot’s left motor (which is an instance of <a class="reference internal" href="actuators.html#Sandbox.Motor" title="Sandbox.Motor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Motor</span></code></a>). Negative values will be converted to positive ones when the motor is initialised.</p></li>
+<li><p><strong>right_motor_max_speed</strong> (<em>float</em>) – Maximum speed (magnitude) of robot’s right motor (which is an instance of <a class="reference internal" href="actuators.html#Sandbox.Motor" title="Sandbox.Motor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Motor</span></code></a>). Negative values will be converted to positive ones when the motor is initialised.</p></li>
+<li><p><strong>left_motor_inertia</strong> (<em>float</em>) – Inertia parameter for the robot’s left motor</p></li>
+<li><p><strong>right_motor_inertia</strong> (<em>float</em>) – Inertia parameter for the robot’s right motor</p></li>
+<li><p><strong>left_motor_noisemaker</strong> (<a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><em>NoiseSource</em></a>) – Noise source for robot’s left motor (usually an instance of <a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseSource</span></code></a>). Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p><strong>right_motor_noisemaker</strong> (<a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><em>NoiseSource</em></a>) – Noise source for robot’s right motor (usually an instance of <a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseSource</span></code></a>). Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p><strong>left_motor_reversed</strong> (<em>bool</em>) – A flag which is used to detrmine whether or not the robot’s left motor runs in the reverse direction. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+<li><p><strong>right_motor_reversed</strong> (<em>bool</em>) – A flag which is used to detrmine whether or not the robot’s right motor runs in the reverse direction. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+<li><p><strong>colour</strong> (<em>str</em>) – Colour of the robot’s body. Defaults to <code class="docutils literal notranslate"><span class="pre">'darkblue'</span></code></p></li>
+<li><p><strong>light</strong> (Instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code>) – The light which is attached to the robot, so that it can be detected by other robots (instance of <a class="reference internal" href="stimuli_sensors.html#Sandbox.LightSource" title="Sandbox.LightSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">LightSource</span></code></a>). Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case the robot has no light attached.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.control">
+<code class="sig-name descname"><span class="pre">control</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activations</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only called from step().</p>
+<p>A method which gets motor speed commands by calling the step method of the robot’s controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.draw">
+<code class="sig-name descname"><span class="pre">draw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw robot in specified Matplotlib axes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.get_data">
+<code class="sig-name descname"><span class="pre">get_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the robot’s simulation data, including the data from its sensors, motors and controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.integrate">
+<code class="sig-name descname"><span class="pre">integrate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speeds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.integrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only called from step().</p>
+<p>Applies a motor activation vector to an agent state, and simulates the consequences using Euler integration over a dt interval.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.pygame_draw">
+<code class="sig-name descname"><span class="pre">pygame_draw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shiftx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shifty</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.pygame_draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.pygame_draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw robot on PyGame screen.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reset_controller</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method resets a robot’s state and simulation data to their initial values, so that it can be used again.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reset_controller</strong> (<em>bool</em>) – determines whether or not the robot’s controller is also reset, defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>. This is because sometimes you might want to reset a robot and simulate it again taking advantage of any information or learning which the controller has acquired.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.step_actuators">
+<code class="sig-name descname"><span class="pre">step_actuators</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed_commands</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.step_actuators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.step_actuators" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.step_sensors">
+<code class="sig-name descname"><span class="pre">step_sensors</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.step_sensors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.step_sensors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only called from step().</p>
+<p>A method which steps the sensors in the robot’s <cite>sensors</cite> list, and returns the sensor activations in a list.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Robot.update_children_positions">
+<code class="sig-name descname"><span class="pre">update_children_positions</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Robot.html#Robot.update_children_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Robot.update_children_positions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is used to update the positions and orientations of a robot’s attached subsystems, such as its sensors, as the robot moves.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="stimuli_sensors.html" class="btn btn-neutral float-left" title="Sources of stimuli and sensors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="actuators.html" class="btn btn-neutral float-right" title="Actuators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

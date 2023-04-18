@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.sensors &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.sensors</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.sensors</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.stimuli</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.noise</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># base sensor class. in the current implementation, only contains methods for drawing</span>
+<div class="viewcode-block" id="Sensor"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Sensor">[docs]</a><span class="k">class</span> <span class="nc">Sensor</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An abstract class for representing sensors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># by default, a Sensor has no position, but one can be specified (and for most sensors will)</span>
+<div class="viewcode-block" id="Sensor.__init__"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Sensor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colour</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            __init__(x: float=None, y: float=None, theta: float=None, colour: str=&#39;red&#39;, radius: float =0.2, enabled: bool=True)</span>
+
+<span class="sd">            :param x: The initial x-coordinate of the :class:`Sensor`, defaults to ``None``.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The initial y-coordinate of the :class:`Sensor`, defaults to ``None``.</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :param theta:The initial angular orientation of the :class:`Sensor`, defaults to ``None``.</span>
+<span class="sd">            :type theta: float</span>
+
+<span class="sd">            :param colour: The colour of the sensor, for drawing.</span>
+<span class="sd">            :type colour: str</span>
+
+<span class="sd">            :param radius: The radius of the sensor, for drawing.</span>
+<span class="sd">            :type radius: float</span>
+
+<span class="sd">            :param enabled: A flag for specifying whether or not a sensor is enabled. Only the attribute is implemented here - how to use it is a decision for subclasses, e.g. in :class:`LightSensor`.</span>
+<span class="sd">            :type enabled: bool</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colour</span> <span class="o">=</span> <span class="n">colour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span></div>
+
+    <span class="c1"># draw sensor in the specified matplotlib axes</span>
+<div class="viewcode-block" id="Sensor.draw"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Sensor.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to draw the sensor in the specified matplotlib axes, as a small coloured circle.</span>
+
+<span class="sd">            :param ax:</span>
+<span class="sd">            :type ax: Matplotlib axes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_position</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">colour</span><span class="p">))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;k.&#39;</span><span class="p">)</span></div>
+
+    <span class="c1"># draw sensor in a pygame display</span>
+<div class="viewcode-block" id="Sensor.pygame_draw"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Sensor.pygame_draw">[docs]</a>    <span class="k">def</span> <span class="nf">pygame_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shifty</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to draw the sensor in the specified PyGame display, as a small coloured circle.</span>
+
+<span class="sd">            :param screen: The PyGame display to draw on.</span>
+<span class="sd">            :type screen: PyGame display</span>
+
+<span class="sd">            :param scale: The scale to draw at.</span>
+<span class="sd">            :type scale: float</span>
+
+<span class="sd">            :param shiftx: The offset from centre in the x-axis for drawing.</span>
+<span class="sd">            :type shiftx: float</span>
+
+<span class="sd">            :param shifty: The offset from centre in the y-axis for drawing.</span>
+<span class="sd">            :type shifty: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_position</span><span class="p">:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">shifty</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">colour</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">scale</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Sensor.get_data"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Sensor.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to get the sensors data, in the form of a dict.</span>
+
+<span class="sd">            :return: The sensor&#39;s data, which includes the data returned from :meth:`Sandbox.System.get_data`, as well as the sensor&#39;s colour and radius (which are both assumed to be static).</span>
+<span class="sd">            :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;colour&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">colour</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+        <span class="k">return</span> <span class="n">data</span></div></div>
+
+<span class="k">class</span> <span class="nc">FOV_thing</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class which is used only for drawing a sensor&#39;s field of view (FOV).</span>
+<span class="sd">        This code is separated from :class:`Sensor`, as not all sensors will necesarily have a FOV. Sensor classes which have FOV should have multiple inheritance of :class:`Sensor` and :class:`FOV_thing`, as in the case of :class:`LightSensor`.</span>
+
+<span class="sd">        NOTE: this class needs code adding for Matplotlib drawing - it currently only has methods for PyGame.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">pygame_draw_FOV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shifty</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to draw a FOV in the specified PyGame display, with two short lines which indicate its angular extent.</span>
+<span class="sd">            NOTE: this method is in need of some improvement, in the next implementation - it should be possible to draw the lines at different lengths, and it should also somehow be made clear which line starts and which ends the FOV.</span>
+
+<span class="sd">            :param screen: The PyGame display to draw on.</span>
+<span class="sd">            :type screen: PyGame display</span>
+
+<span class="sd">            :param scale: The scale to draw at.</span>
+<span class="sd">            :type scale: float</span>
+
+<span class="sd">            :param shiftx: The offset from centre in the x-axis for drawing.</span>
+<span class="sd">            :type shiftx: float</span>
+
+<span class="sd">            :param shifty: The offset from centre in the y-axis for drawing.</span>
+<span class="sd">            :type shifty: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">left_end_x</span><span class="p">,</span> <span class="n">left_end_y</span><span class="p">,</span> <span class="n">right_end_x</span><span class="p">,</span> <span class="n">right_end_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fov_ends</span><span class="p">()</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span>
+                         <span class="n">start_pos</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">shifty</span><span class="p">),</span>
+                         <span class="n">end_pos</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">left_end_x</span> <span class="o">+</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">left_end_y</span> <span class="o">+</span> <span class="n">shifty</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span>
+                         <span class="n">start_pos</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">shifty</span><span class="p">),</span>
+                         <span class="n">end_pos</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">right_end_x</span> <span class="o">+</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">right_end_y</span> <span class="o">+</span> <span class="n">shifty</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># calculate end coords of lines indicating field of view</span>
+    <span class="k">def</span> <span class="nf">__fov_ends</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            A method for calculating the coordinates of the ends of the lines for drawing a FOV.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">left_end_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">FOV</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">left_end_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">FOV</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">right_end_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">FOV</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">right_end_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">FOV</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">left_end_x</span><span class="p">,</span> <span class="n">left_end_y</span><span class="p">,</span> <span class="n">right_end_x</span><span class="p">,</span> <span class="n">right_end_y</span>
+
+    <span class="c1"># draw lines indicating field of view in matplotlib axes</span>
+    <span class="k">def</span> <span class="nf">draw_FOV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">left_end_x</span><span class="p">,</span> <span class="n">left_end_y</span><span class="p">,</span> <span class="n">right_end_x</span><span class="p">,</span> <span class="n">right_end_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fov_ends</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">left_end_x</span><span class="p">],</span>
+                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">left_end_y</span><span class="p">],</span> <span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="s1">&#39;2&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">right_end_x</span><span class="p">],</span>
+                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">right_end_y</span><span class="p">],</span> <span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="s1">&#39;2&#39;</span><span class="p">)</span>
+
+<span class="c1"># a class to define a sensor which detects instances of the LightSource class</span>
+<div class="viewcode-block" id="LightSensor"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSensor">[docs]</a><span class="k">class</span> <span class="nc">LightSensor</span><span class="p">(</span><span class="n">Sensor</span><span class="p">,</span> <span class="n">FOV_thing</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class which represents a light sensor. :class:`LightSensor` inherits both from :class:`Sensor` and :class:`FOV_thing`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LightSensor.__init__"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSensor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">light_sources</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LightSource</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">FOV</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">noisemaker</span><span class="p">:</span> <span class="n">NoiseSource</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            __init__(light_sources: List[LightSource], x: float, y: float, theta: float=0, FOV: float=2*math.pi, noisemaker: NoiseSource=None, label: str=None, enabled: bool=True)</span>
+
+<span class="sd">            :param light_sources:</span>
+<span class="sd">            :type light_sources: list[:class:`Light_Source`]</span>
+
+<span class="sd">            :param x:</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y:</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :param theta:</span>
+<span class="sd">            :type theta: float</span>
+
+<span class="sd">            :param FOV:</span>
+<span class="sd">            :type FOV: float</span>
+
+<span class="sd">            :param noisemaker:</span>
+<span class="sd">            :type noisemaker: :class:`NoiseSource`</span>
+
+<span class="sd">            :param label: A :class:`LightSensor`&#39;s label determines which of the :class:`LightSource` s in its list it can actually detect. Defaults to ``None``, in which case the sensor will detect all light sources in its list. If a sensor&#39;s ``label`` attribute is set to some string, then it will only detect light sources which have their ``label`` attributes set to the same value.</span>
+<span class="sd">            :type label: str</span>
+
+<span class="sd">            :param enabled: A flag for specifying whether or not a light sensor is enabled. Defaults to ``True``. If set to ``False``, then the sensor will not detect anything.</span>
+<span class="sd">            :type enabled: bool</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="n">enabled</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">light_sources</span> <span class="o">=</span> <span class="n">light_sources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_light_sources</span> <span class="o">=</span> <span class="n">light_sources</span>  <span class="c1"># a list of LightSource instances which this sensor can detect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># sensor activation. this variable is updated in and returned from the step method. it is stored separately in case you want to access it multiple times between simulation steps, although that is unlikely to be necessary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activations</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">]</span>  <span class="c1"># for plotting and analysis, a sensor keeps a complete record of its activation over time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span> <span class="o">=</span> <span class="n">noisemaker</span>  <span class="c1"># noise source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FOV</span> <span class="o">=</span> <span class="n">FOV</span>  <span class="c1"># sensor angular field of view</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_enabled</span> <span class="o">=</span> <span class="n">enabled</span> <span class="c1"># Perhaps should be moved to Sensor!?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_FOV</span> <span class="o">=</span> <span class="n">FOV</span></div>
+
+<div class="viewcode-block" id="LightSensor.reset"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSensor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            A method to reset a sensor to its initial state, by resetting its ``x``, ``y``, ``theta``, ``light_sources``, ``activation``, ``activations``, ``label``, ``enabled``, and ``FOV`` attributes to their values at time of construction. If the sensor has a ``noisemaker``, then the reset method of that object will also be called.</span>
+
+<span class="sd">            Note: this method will not reset any attributes which have been added outside of the :meth:`Sandbox.LightSensor.__init__` method.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activations</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_enabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FOV</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_FOV</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">light_sources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_light_sources</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LightSensor.step"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to step a light sensor forwards in time. A :class:`LightSensor` has no dynamics, so technically is not stepped in time, but &#39;step&#39; is used for consistency.</span>
+
+<span class="sd">            :param dt: Integration interval - not used here.</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :return: The activation (level of stimulation) of the sensor. When the sensor detects multiple light sources, their effects are summed linearly.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>  <span class="c1"># call System step method, to store xy-coordinates and theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># begin with zero activation, and add to it for every detected light source</span>
+        <span class="c1"># only detect anything if enabled</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_sources</span><span class="p">:</span>  <span class="c1"># for every light source the sensor can detect</span>
+                <span class="c1"># if this sensor has a label set, then it will only detect sensors with the same label</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="n">source</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+                    <span class="n">angle_to_source</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># find angle of vector from light source to sensor</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">angle_difference</span><span class="p">(</span><span class="n">angle_to_source</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FOV</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span>  <span class="c1"># if angle is within field fo view, the sensor detects the light</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">+=</span> <span class="n">source</span><span class="o">.</span><span class="n">get_brightness_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># stimuli from multiple lights are added linearly</span>
+
+            <span class="c1"># add noise, if a noisemaker is implemented</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+        <span class="c1"># record activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">)</span>  <span class="c1"># store activation</span>
+
+        <span class="c1"># return activation</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span>  <span class="c1"># return activation</span></div>
+
+    <span class="c1">##</span>
+    <span class="c1">#</span>
+    <span class="c1"># This method allows the same sensor to be used in multiple runs, and collect</span>
+    <span class="c1"># its data each time</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="LightSensor.get_data"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSensor.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;activations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activations</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;FOV&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FOV</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;noises&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="p">:</span>
+            <span class="c1"># print(self.noisemaker.get_data())</span>
+            <span class="c1"># print()</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;noises&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noisemaker</span><span class="o">.</span><span class="n">get_data</span><span class="p">()[</span><span class="s2">&quot;noises&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="LightSensor.pygame_draw"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSensor.pygame_draw">[docs]</a>    <span class="k">def</span> <span class="nf">pygame_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shifty</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method for drawing the sensor, as a small circle with lines radiating out from its centre to inidicate the sensor&#39;s FOV.</span>
+
+<span class="sd">            :param screen: The PyGame display to draw on.</span>
+<span class="sd">            :type screen: PyGame display</span>
+
+<span class="sd">            :param scale: The scale to draw at.</span>
+<span class="sd">            :type scale: float</span>
+
+<span class="sd">            :param shiftx: The offset from centre in the x-axis for drawing.</span>
+<span class="sd">            :type shiftx: float</span>
+
+<span class="sd">            :param shifty: The offset from centre in the y-axis for drawing.</span>
+<span class="sd">            :type shifty: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">pygame_draw</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">shifty</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pygame_draw_FOV</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">shifty</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

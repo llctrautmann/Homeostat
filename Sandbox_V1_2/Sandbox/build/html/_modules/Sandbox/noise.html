@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.noise &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.noise</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.noise</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.System</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">    I am using &quot;# type: ignore&quot; in a couple of places in here, to disable some annoying errors - I don&#39;t entirely like doing this, as I&#39;m guessing it might disable errors I would want to see as well as ones I don&#39;t want to see.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">    Note that, for now, it is assumed that the parameters of NoiseSources do not change, and so do not need to appear in &quot;reset&quot; - this is something that should be changed.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<span class="c1"># a NoiseSource is a kind of plugin object which can be attached to or incorporated into other objects</span>
+<div class="viewcode-block" id="NoiseSource"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseSource">[docs]</a><span class="k">class</span> <span class="nc">NoiseSource</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The abstract superclass for all classes representing sources of noise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># construct noise source</span>
+<div class="viewcode-block" id="NoiseSource.__init__"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__()</span>
+
+<span class="sd">            Initialise NoiseSource.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noises</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">]</span></div>
+
+    <span class="c1"># when stepped, a noise source generates a noise signal. this is where that signal gets stored for later analysis</span>
+<div class="viewcode-block" id="NoiseSource.step"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span> <span class="c1"># type: ignore</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step the noise source forwards in time, and generate a noise output.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the noise source over - not currently used.</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :return: The noise source&#39;s output.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noises</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span></div>
+
+<div class="viewcode-block" id="NoiseSource.reset"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseSource.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Reset NoiseSource, by resetting noise level to 0 and deleting any existing history of noise outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noises</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="NoiseSource.get_data"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseSource.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Get the noise source&#39;s data.</span>
+
+<span class="sd">            :return: The noise source&#39;s data.</span>
+<span class="sd">            :rtype: dict of data, which only includes the history of noise outputs in this superclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noises</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;noises&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">}</span></div></div>
+
+<span class="c1"># a white noise source. in every simulation step, the noise will take any value in the specified interval</span>
+<span class="c1">#   note that white noise can often be filtered quite easily</span>
+<div class="viewcode-block" id="WhiteNoiseSource"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.WhiteNoiseSource">[docs]</a><span class="k">class</span> <span class="nc">WhiteNoiseSource</span><span class="p">(</span><span class="n">NoiseSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class representing a source of white noise. In every simulation step, the noise source outputs a random value drawn from a uniform distribution, the limits of which are set when the noise source is constructed.</span>
+
+<span class="sd">        .. figure:: images/WhiteNoiseSource.svg</span>
+<span class="sd">          :width: 400</span>
+<span class="sd">          :align: center</span>
+<span class="sd">          :alt: White noise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># construct white noise source which will generate noise in the interval [min_val, max_val]</span>
+<div class="viewcode-block" id="WhiteNoiseSource.__init__"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.WhiteNoiseSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(min_val, max_val)</span>
+
+<span class="sd">            Construct instance of :class:`WhiteNoiseSource`. The noise generated by the noisesource will lie between ``min_val`` and ``max_val``.</span>
+
+<span class="sd">            :param min_val: The minimum value of the noise that this source will output.</span>
+<span class="sd">            :type min_val: float</span>
+
+<span class="sd">            :param max_val: The maximum value of the noise that this source will output.</span>
+<span class="sd">            :type max_val: float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span> <span class="c1"># type: ignore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span>  <span class="c1"># scale of the noise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span> <span class="o">=</span> <span class="n">min_val</span>  <span class="c1"># minimum value noise will take (i.e. offset)</span></div>
+
+    <span class="c1"># step noise</span>
+<div class="viewcode-block" id="WhiteNoiseSource.step"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.WhiteNoiseSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step noise source forwards in time. For this class, all that involves is generating a new output value and updating its history.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the noise source over - not currently used.</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :return: Output from noise source.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>  <span class="c1"># generate noise</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>  <span class="c1"># call step of NoiseSource to store noise</span></div></div>
+
+
+<span class="c1"># brown noise source. technically, brown noise is the integral of white noise, and it is named after Brownian motion</span>
+<span class="c1">#   note that drift or brown noise can be quite challenging to detect and compensate for</span>
+<div class="viewcode-block" id="BrownNoiseSource"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.BrownNoiseSource">[docs]</a><span class="k">class</span> <span class="nc">BrownNoiseSource</span><span class="p">(</span><span class="n">NoiseSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class representing a source of brown noise, (e.g. a random walk like brownian motion). Technically, brown noise is the integral of white noise, so in each simulation step white noise is generated and then added to the noise level from the previous simulation step. This results in a drifting noise level.</span>
+
+<span class="sd">        .. figure:: images/BrownNoiseSource.svg</span>
+<span class="sd">          :width: 400</span>
+<span class="sd">          :align: center</span>
+<span class="sd">          :alt: Brown noise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct brown noise source. max_step_size is the maximum step in either positive or negative direction, i.e.</span>
+    <span class="c1"># half the scale of the white noise</span>
+<div class="viewcode-block" id="BrownNoiseSource.__init__"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.BrownNoiseSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_step_size</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(max_step_size)</span>
+
+<span class="sd">            Construct instance of :class:`BrownNoiseSource`.</span>
+
+<span class="sd">            :param max_step_size: The maximum distance that the output of the :class:`BrownNoiseSource` will move by in a single simulation step.</span>
+<span class="sd">            :type max_step_size: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_step_size</span> <span class="o">=</span> <span class="n">max_step_size</span></div>
+
+    <span class="c1"># step noise source</span>
+<div class="viewcode-block" id="BrownNoiseSource.step"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.BrownNoiseSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step noise source forwards in time. For this class, all that involves is generating a new output value and updating its history.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the noise source over - not currently used.</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :return: Output from noise source.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_step_size</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># generate noise</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>  <span class="c1"># store noise</span></div></div>
+
+
+<span class="c1"># a spike noise source generates positive or negative spikes in every simulation step, with the specified probability</span>
+<span class="c1"># positive and negative spike sizes are specified independently (and either one could have size 0, if they are not</span>
+<span class="c1"># wanted)</span>
+<span class="c1"># the duration of a spike is a single simulation step, but as currently implemented nothing prevents two or more steps</span>
+<span class="c1"># from occurring in a row, which is equivalent to a variable length spike (although this will be rare for low prob</span>
+<span class="c1"># values)</span>
+<span class="c1">#   note that this can be a very challenging kind of noise to handle for some controllers</span>
+<div class="viewcode-block" id="SpikeNoiseSource"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.SpikeNoiseSource">[docs]</a><span class="k">class</span> <span class="nc">SpikeNoiseSource</span><span class="p">(</span><span class="n">NoiseSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A class representing a source of &quot;spike&quot; noise.</span>
+
+<span class="sd">        .. figure:: images/SpikeNoiseSource.svg</span>
+<span class="sd">          :width: 400</span>
+<span class="sd">          :align: center</span>
+<span class="sd">          :alt: Spike noise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct noise source</span>
+<div class="viewcode-block" id="SpikeNoiseSource.__init__"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.SpikeNoiseSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">pos_size</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">neg_size</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(prob, pos_size, neg_size)</span>
+
+<span class="sd">            Construct a spike noise source. The sizes of positive and negative spikes are controlled independently. If you don&#39;t want to use either positive or negative spikes, just set the corresponding parameter to 0, but note that you might want to double the spike probability parameter to compensate for half of the spikes (on average) being 0.</span>
+
+<span class="sd">            :param prob: The probability of a spike being emitted. When a spike is output, it will be either positive or negative with equal probability.</span>
+<span class="sd">            :type prob: float</span>
+
+<span class="sd">            :param pos_size: The size of a positive spike.</span>
+<span class="sd">            :type pos_size: float</span>
+
+<span class="sd">            :param neg_size: The size of a negative spike.</span>
+<span class="sd">            :type neg_size: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prob</span> <span class="o">=</span> <span class="n">prob</span>  <span class="c1"># probability of a spike</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_size</span> <span class="o">=</span> <span class="n">pos_size</span>  <span class="c1"># size of positive spike</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_size</span> <span class="o">=</span> <span class="n">neg_size</span>  <span class="c1"># size of negative spike</span></div>
+
+    <span class="c1"># this was added for convenience, for use with SpikeNoiseDisturbanceSource, and is used to enable and disable the noise</span>
+    <span class="c1"># - it does no real harm to do it this way, but it is not consistent with other the way the rest is coded</span>
+    <span class="c1">#   in a future version this will be changed</span>
+<div class="viewcode-block" id="SpikeNoiseSource.set_params"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.SpikeNoiseSource.set_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method for setting the noise source&#39;s parameters.</span>
+
+<span class="sd">            :param params: The noise source&#39;s parameters, in the form ``[prob, pos_size, neg_size]``</span>
+<span class="sd">            :type params: list(float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prob</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_size</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_size</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+    <span class="c1"># step noise</span>
+<div class="viewcode-block" id="SpikeNoiseSource.step"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.SpikeNoiseSource.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step noise source forwards in time. For this class, all that involves is generating a new output value and updating its history.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the noise source over - not currently used.</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :return: Output from noise source.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># noise is zero by default</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">:</span>  <span class="c1"># if a randomly generated number is less than the probability of a spike, then spike</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># spikes are positive or negative with equiprobability</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_size</span>  <span class="c1"># positive spike</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_size</span>  <span class="c1"># negative spike</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>  <span class="c1"># call step of NoiseSource to store noise</span></div></div>
+
+
+<span class="c1"># in the real world, we might expect different types of noise to be superimposed, e.g. low level white noise, plus some</span>
+<span class="c1"># drift (brown noise), and possibly the occasional big spike coming from somewhere</span>
+<span class="c1"># this class provides a convenient way to have a single NoiseSource which incorporates all of those kinds of noise</span>
+<div class="viewcode-block" id="NoiseMaker"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseMaker">[docs]</a><span class="k">class</span> <span class="nc">NoiseMaker</span><span class="p">(</span><span class="n">NoiseSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A subclass of :class:`NoiseSource` which provides a source of mixed noise: white, brown and &quot;spike&quot;. A :class:`NoiseMaker` has its own instances of :class:`WhiteNoiseSource`, :class:`BrownNoiseSource` and :class:`SpikeNoiseSource`, and its output is the sum of their outputs.</span>
+
+<span class="sd">        .. figure:: images/NoiseMaker.svg</span>
+<span class="sd">          :width: 400</span>
+<span class="sd">          :align: center</span>
+<span class="sd">          :alt: Mixed noise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="NoiseMaker.__init__"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseMaker.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">white_noise_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                 <span class="n">brown_noise_step</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">spike_noise_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(white_noise_params: List[float]=[0.0, 0.0], brown_noise_step: float=0, spike_noise_params: List[float]=[0.0, 0.0, 0.0])</span>
+
+<span class="sd">            Construct :class:`NoiseMaker`. The noisemaker&#39;s individual noise sources will only be constructed if non-zero parameters for them are passed into ``__init__``. The :class:`NoiseMaker` class does not provide for this to be changed after construction, although additional noise sources can always be added to a noisemaker&#39;s list manually.</span>
+
+<span class="sd">            :param white_noise_params: Parameters for the noisemaker&#39;s :class:`WhiteNoiseSource`. Defaults to [0, 0], in which case the noisemaker will</span>
+<span class="sd">            :type white_noise_params: list(float)</span>
+
+<span class="sd">            :param brown_noise_step:</span>
+<span class="sd">            :type brown_noise_step: float</span>
+
+<span class="sd">            :param spike_noise_params:</span>
+<span class="sd">            :type spike_noise_params: list(float)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_sources</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">NoiseSource</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of noise sources</span>
+        <span class="k">if</span> <span class="n">white_noise_params</span> <span class="o">!=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>  <span class="c1"># for each type of NoiseSource, it is only added to the list if it has non-zero parameters</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noise_sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WhiteNoiseSource</span><span class="p">(</span><span class="n">max_val</span><span class="o">=</span><span class="n">white_noise_params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">min_val</span><span class="o">=</span><span class="n">white_noise_params</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">brown_noise_step</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noise_sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BrownNoiseSource</span><span class="p">(</span><span class="n">max_step_size</span><span class="o">=</span><span class="n">brown_noise_step</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">spike_noise_params</span> <span class="o">!=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noise_sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SpikeNoiseSource</span><span class="p">(</span><span class="n">prob</span><span class="o">=</span><span class="n">spike_noise_params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos_size</span><span class="o">=</span><span class="n">spike_noise_params</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">neg_size</span><span class="o">=</span><span class="n">spike_noise_params</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span></div>
+
+    <span class="c1"># step noisemaker</span>
+<div class="viewcode-block" id="NoiseMaker.step"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseMaker.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Step the :class:`NoiseMaker` forwards in time. All attached noise sources are stepp forwards, and then their outputs are summed to get the output from this noisemaker.</span>
+
+<span class="sd">            :param dt: Interval of time to integrate the noise source over - not currently used.</span>
+<span class="sd">            :type dt: float</span>
+
+<span class="sd">            :return: Output from noise source.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">noise_source</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sources</span><span class="p">:</span>  <span class="c1"># for all noise sources, effects are accumulated</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">+=</span> <span class="n">noise_source</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>  <span class="c1"># accumulated noise may be positive or negative</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>  <span class="c1"># call NoiseSource step to store noise for later analysis</span></div>
+
+<div class="viewcode-block" id="NoiseMaker.reset"><a class="viewcode-back" href="../../noise_sources.html#Sandbox.NoiseMaker.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">noise_source</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sources</span><span class="p">:</span>
+            <span class="n">noise_source</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

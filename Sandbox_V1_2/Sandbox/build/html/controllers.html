@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Controllers &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Environments" href="environment.html" />
+    <link rel="prev" title="Actuators" href="actuators.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Controllers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#controller-class">Controller class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#braitenbergcontroller-class">BraitenbergController class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#light-seeking-control-function">Light seeking control function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#light-avoiding-control-function">Light avoiding control function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Controllers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/controllers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="controllers">
+<h1>Controllers<a class="headerlink" href="#controllers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="controller-class">
+<h2>Controller class<a class="headerlink" href="#controller-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.Controller">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">Controller</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs_n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands_n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noisemakers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.noise.NoiseSource</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noisemakers_inds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_enabled</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_interval</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Controller.html#Controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class represents a controller for an <a class="reference internal" href="agents.html#Sandbox.Agent" title="Sandbox.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a>.
+There are two routes to customising <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a> or one of its subclasses:</p>
+<ol class="arabic simple">
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">step_fun(dt,</span> <span class="pre">inputs,</span> <span class="pre">params,</span> <span class="pre">state)</span></code>. <code class="docutils literal notranslate"><span class="pre">step_fun</span></code> is a function which can be written anywhere in the code for your experiment and passed to a <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a> when it is constructed. This will only work for relatively simple controllers.</p></li>
+<li><p>By creating a subclass of <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a>, like <a class="reference internal" href="#Sandbox.BraitenbergController" title="Sandbox.BraitenbergController"><code class="xref py py-class docutils literal notranslate"><span class="pre">BraitenbergController</span></code></a>, where you can add any attributes you need to by writing a new __init__ method (which should call <code class="docutils literal notranslate"><span class="pre">super().__init__</span></code>, so that attributes from <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a> are inherited and set up correctly). In some cases, you may also need to override the step method of <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a> (possibly using <code class="docutils literal notranslate"><span class="pre">super().step</span></code> to inherit existing functionality), and to add other methods to the class.</p></li>
+</ol>
+<p>If you want to create a self-adaptive controller, then you can either create a subclass of <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a> or - for relatively simple cases - you can implement an <code class="docutils literal notranslate"><span class="pre">adapt_fun(dt,</span> <span class="pre">inputs_hist,</span> <span class="pre">commands_hist,</span> <span class="pre">params_hist)</span></code> function and pass it into a <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a> when it is constructed.</p>
+<dl class="py method">
+<dt id="Sandbox.Controller.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs_n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands_n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noisemakers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><span class="pre">NoiseSource</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noisemakers_inds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_enabled</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_interval</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/Controller.html#Controller.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Controller.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs_n</strong> (<em>int</em>) – The number of inputs expected by the controller.</p></li>
+<li><p><strong>commands_n</strong> (<em>int</em>) – The number of outputs (commands) that the controller is expected to return from its <code class="docutils literal notranslate"><span class="pre">step</span></code> method.</p></li>
+<li><p><strong>step_fun</strong> (<em>function</em>) – The function which will be used to generate the controller’s outputs, given the inputs to the controller’s <code class="docutils literal notranslate"><span class="pre">step</span></code> method, the interval of time to integrate over, and any state and parameters the controller makes use of.</p></li>
+<li><p><strong>noisemakers</strong> (<em>List of NoiseSource objects.</em>) – A list of noise sources which will potentially affect the commands the controller outputs.</p></li>
+<li><p><strong>noisemaker_inds</strong> (<em>List of integers.</em>) – A list of indices of commands which will potentially have noise added to them. Any indices which are out of range in either the list of noisemakers or commands will be ignored.</p></li>
+<li><p><strong>params</strong> (<em>list of floats.</em>) – A list of parameters used by the controller. These parameters will be used in the controller’s <code class="docutils literal notranslate"><span class="pre">step_fun</span></code> function, which will be caused from the controller’s <code class="docutils literal notranslate"><span class="pre">step</span></code> method.</p></li>
+<li><p><strong>adapt_fun</strong> (<em>function</em>) – A function wich can be used to adapt a controller, by changing its parameters. It only has access to the same data that the controller does: its histories of inputs, outputs, and parameter values.</p></li>
+<li><p><strong>adapt_enabled</strong> (<em>bool</em>) – When a <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a> has an <code class="docutils literal notranslate"><span class="pre">adapt_fun</span></code>, that function will only be used when <code class="docutils literal notranslate"><span class="pre">adapt_enabled</span></code> is set to True.</p></li>
+<li><p><strong>test_interval</strong> (<em>float</em>) – The period of time to wait between parameter changes, if an adapt_fun is being used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Controller.get_data">
+<code class="sig-name descname"><span class="pre">get_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/Controller.html#Controller.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Controller.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method for getting the simulation run data from a Controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dict containing the Controller’s parameters and recorded data, including the data of any NoiseSources which are attached to the controller.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Controller.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/Sandbox/Controller.html#Controller.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Controller.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to reset the controller to its initial state, so that it can be reused without the data and states from a previous simulation run affecting the next run.</p>
+<p>You will typically want to get the controller’s data before resetting it, e.g. so that you can store if for the purposes of analysis. The most convenient way to do this will often be to call the <code class="docutils literal notranslate"><span class="pre">get_data_and_reset</span></code> method defined in the <a class="reference internal" href="systems.html#Sandbox.System" title="Sandbox.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Sandbox.Controller.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/Controller.html#Controller.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.Controller.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to step a controller forwards in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – The interval of time to integrate the controller over.</p></li>
+<li><p><strong>inputs</strong> (<em>list of floats</em>) – The inputs to the controller.</p></li>
+<li><p><strong>state</strong> (<em>list of floats</em>) – This variable can be used to pass in information about an agent’s state (e.g. for a robot this could be [x, y, theta]). NOTE: even though I have included this shortcut, its use should normally be avoided - strictly speaking, an agent should use its sensors to estimate its state, and then pass its estimates to its controller in <code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of commands.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of floats.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="braitenbergcontroller-class">
+<h2>BraitenbergController class<a class="headerlink" href="#braitenbergcontroller-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Sandbox.BraitenbergController">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">BraitenbergController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.noise.NoiseSource</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Sandbox.noise.NoiseSource</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/BraitenbergController.html#BraitenbergController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.BraitenbergController" title="Permalink to this definition">¶</a></dt>
+<dd><p>A subclass of <a class="reference internal" href="#Sandbox.Controller" title="Sandbox.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">Controller</span></code></a>, which can be used to control an instance of <a class="reference internal" href="agents.html#Sandbox.Robot" title="Sandbox.Robot"><code class="xref py py-class docutils literal notranslate"><span class="pre">Robot</span></code></a>.
+It, optionally, has a noisemaker for each of the control commands to the robots two motors.
+See the <code class="docutils literal notranslate"><span class="pre">BraitenbergController.py</span></code> source code file for examples of controllers which implement the behaviours of simple Braitenberg Vehicles.</p>
+<dl class="py method">
+<dt id="Sandbox.BraitenbergController.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_fun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><span class="pre">NoiseSource</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_noisemaker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><span class="pre">NoiseSource</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Sandbox/BraitenbergController.html#BraitenbergController.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.BraitenbergController.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>step_fun</strong> (<em>function</em>) – The function which will be used to generate the controller’s outputs, given the inputs to the controller’s <code class="docutils literal notranslate"><span class="pre">step</span></code> method, the interval of time to integrate over, and any state and parameters the controller makes use of.</p></li>
+<li><p><strong>left_noisemaker</strong> (<a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseSource</span></code></a>) – A noise source which will potentially affect the command which the controller outputs for the robot’s left motor.</p></li>
+<li><p><strong>right_noisemaker</strong> (<a class="reference internal" href="noise_sources.html#Sandbox.NoiseSource" title="Sandbox.NoiseSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoiseSource</span></code></a>) – A noise source which will potentially affect the command which the controller outputs for the robot’s right motor.</p></li>
+<li><p><strong>gain</strong> (<em>float</em>) – A gain parameter which can be used to control how fast the robot moves in response to being stimulated by a light source.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="light-seeking-control-function">
+<h2>Light seeking control function<a class="headerlink" href="#light-seeking-control-function" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="Sandbox.light_seeking">
+<code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">light_seeking</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/BraitenbergController.html#light_seeking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.light_seeking" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function, for use with a <a class="reference internal" href="#Sandbox.BraitenbergController" title="Sandbox.BraitenbergController"><code class="xref py py-class docutils literal notranslate"><span class="pre">BraitenbergController</span></code></a>, which implements light-seeking behaviour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Interval of time to integrate the controller over.</p></li>
+<li><p><strong>inputs</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – The list of sensory inputs to the controller.</p></li>
+<li><p><strong>params</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – The list of controller parameters (in this case, just the controller’s <code class="docutils literal notranslate"><span class="pre">gain</span></code> attribute).</p></li>
+<li><p><strong>state</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – This variable is included to allow elements of an agent’s state to be used in its controller - in general, use of this is discouraged - where an agent’s state is to be used in control, it should either be measured by an appropriate sensor, and therefore be part of the <code class="docutils literal notranslate"><span class="pre">inputs</span></code> vector, or it should be inferred by the controller itself.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of motor commands.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of floats.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="light-avoiding-control-function">
+<h2>Light avoiding control function<a class="headerlink" href="#light-avoiding-control-function" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="Sandbox.light_avoiding">
+<code class="sig-prename descclassname"><span class="pre">Sandbox.</span></code><code class="sig-name descname"><span class="pre">light_avoiding</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/Sandbox/BraitenbergController.html#light_avoiding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Sandbox.light_avoiding" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function, for use with a <a class="reference internal" href="#Sandbox.BraitenbergController" title="Sandbox.BraitenbergController"><code class="xref py py-class docutils literal notranslate"><span class="pre">BraitenbergController</span></code></a>, which implements light-avoiding behaviour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – Interval of time to integrate the controller over.</p></li>
+<li><p><strong>inputs</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – The list of sensory inputs to the controller.</p></li>
+<li><p><strong>params</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – The list of controller parameters (in this case, just the controller’s <code class="docutils literal notranslate"><span class="pre">gain</span></code> attribute).</p></li>
+<li><p><strong>state</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – This variable is included to allow elements of an agent’s state to be used in its controller - in general, use of this is discouraged - where an agent’s state is to be used in control, it should either be measured by an appropriate sensor, and therefore be part of the <code class="docutils literal notranslate"><span class="pre">inputs</span></code> vector, or it should be inferred by the controller itself.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of motor commands.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of floats.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="actuators.html" class="btn btn-neutral float-left" title="Actuators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="environment.html" class="btn btn-neutral float-right" title="Environments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

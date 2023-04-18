@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox.stimuli &mdash; Sandbox 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Sandbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">General information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../systems.html">Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stimuli_sensors.html">Sources of stimuli and sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../agents.html">Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actuators.html">Actuators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controllers.html">Controllers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../noise_sources.html">Sources of noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disturbance_sources.html">Disturbances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sandbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>Sandbox.stimuli</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Sandbox.stimuli</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.System</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Note: Stimulus classes are not normally stepped, so</span>
+<span class="sd">    they don&#39;t keep histories.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1"># this is the base class for stimuli in the environment. it could be used in other ways, but for now is only used as the</span>
+<span class="c1"># base for the various types of light sources</span>
+<div class="viewcode-block" id="Stimulus"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Stimulus">[docs]</a><span class="k">class</span> <span class="nc">Stimulus</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An abstract class to represent a source of sensory stimulation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Stimulus.__init__"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Stimulus.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_on</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(x: float=None, y: float=None, theta: float=None, is_on: bool=True)</span>
+
+<span class="sd">            :param x: The x-coordinate of the stimulus. Defaults to ``None``.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The y-coordinate of the stimulus. Defaults to ``None``.</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :param theta: The angular orientation of the stimulus. Defaults to ``None``.</span>
+<span class="sd">            :type theta: float</span>
+
+<span class="sd">            :param is_on: A flag which can be use to determine whether or not a stimulus can be detected. Defaults to ``True``. This allows for the stimulus to be turned on and off, but the response to the state of this flag is determined elsewhere, e.g. in :class:`LightSource` - a sensor implementation can choose to ignore this flag and detect a stimulus even when it is not on.</span>
+<span class="sd">            :type is_on: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_on</span> <span class="o">=</span> <span class="n">is_on</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_is_on</span> <span class="o">=</span> <span class="n">is_on</span></div>
+
+    <span class="c1"># get distance from the given xy coordinates to the Stimulus, if the Stimulus has position</span>
+<div class="viewcode-block" id="Stimulus.get_distance"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Stimulus.get_distance">[docs]</a>    <span class="k">def</span> <span class="nf">get_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method for finding the Euclidean distance from the given xy-coordinates to the position of this sensor, assuming it has position - this method should not be invoked on an instance of :class:`Stimulus` which does not have position.</span>
+
+<span class="sd">            :param x: The x-component of the position to find the distance from.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The y-component of the position to find the distance from.</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :return: The distance.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_position</span><span class="p">:</span>
+            <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="p">])</span>  <span class="c1"># vector from sensor to stimulus</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>  <span class="c1"># length of vector, i.e. distance from sensor to stimulus</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Stimulus.get_data"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Stimulus.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to return the data of the stimulus.</span>
+<span class="sd">            Note: this is not likely to be particularly useful, as it only contains the original state, as recorded by :class:`System`, and the current state of &quot;is_on&quot;.</span>
+
+<span class="sd">            :return: A dict containing the data returned from :meth:`Sandbox.System.get_data`, plus ``is_on``.</span>
+<span class="sd">            :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;is_on&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_on</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="Stimulus.reset"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.Stimulus.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to reset the :class:`Stimulus` to its original state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_is_on</span></div></div>
+
+<span class="c1"># this class implements a static and noiseless light source. it has two models for decay of brightness over distance,</span>
+<span class="c1"># inverse square and linear. you should use whichever you find easiest, but that will depend on what kind of controllers</span>
+<span class="c1"># you are working on</span>
+<span class="c1">#   in the linear case, brightness decays from the maximum to zero, according to the specified</span>
+<span class="c1">#   gradient.</span>
+<span class="c1">#       - the downside to this is that there will be a maximum detection distance, beyond which a sensor will not detect</span>
+<span class="c1">#       the light, but this is only likely to be a problem if a large decay gradient is used (not that problems are</span>
+<span class="c1">#       necessarily bad - they can make things more interesting).</span>
+<span class="c1">#       - the upside to the linear decay model is that it may make it easier to program certain kinds of controller.</span>
+<span class="c1">#   in the inverse square case, brightness decays in a way which is closer to reality.</span>
+<span class="c1">#       - the upside to the inverse square model is that there is no hard limit to detection range (although there will</span>
+<span class="c1">#       be a distance at which a sensor is barely stimulated by it)</span>
+<span class="c1">#       - the downside is that the inverse square model can make it more difficult to program certain kinds of</span>
+<span class="c1">#       controller, due to its nonlinearity.</span>
+<div class="viewcode-block" id="LightSource"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource">[docs]</a><span class="k">class</span> <span class="nc">LightSource</span><span class="p">(</span><span class="n">Stimulus</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A subclass of :class:`Stimulus`, :class:`LightSource` is a class which represents a light source. It is possible to set the &quot;model&quot; of intensity of a :class:`LightSource` to be either an inverse square law of decay with distance, or a linear one, or for the light to be detected with constant brightness regardless of distance.</span>
+
+<span class="sd">        .. image:: images/LinearLightSource.svg</span>
+<span class="sd">          :width: 600</span>
+<span class="sd">          :align: center</span>
+<span class="sd">          :alt: Linear light decay model</span>
+
+<span class="sd">        .. image:: images/InvSqLightSource.svg</span>
+<span class="sd">          :width: 600</span>
+<span class="sd">          :align: center</span>
+<span class="sd">          :alt: Inverse square light decay model</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># construct light source</span>
+<div class="viewcode-block" id="LightSource.__init__"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">brightness</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gradient</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;inv_sq&#39;</span><span class="p">,</span> <span class="n">is_on</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">colour</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __init__(x: float=None, y: float=None, theta: float=None, is_on: bool=True)</span>
+
+<span class="sd">            :param x: The x-coordinate of the light.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The y-coordinate of the light.</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :param theta: The orientation of the light. In this implementation, this is unused, as a :class:`LightSource` can be detected from any angle (although the same will not necessarily be true of its subclasses).</span>
+<span class="sd">            :type theta: float</span>
+
+<span class="sd">            :param brightness: The brightness of the light, at its own coordinate.</span>
+<span class="sd">            :type brightness: float</span>
+
+<span class="sd">            :param gradient: The gradient of brightness decay with distance, when the linear model is used.</span>
+<span class="sd">            :type gradient: float</span>
+
+<span class="sd">            :param model: The model. ``inv_sq``, ``linear``, and ``binary`` are valid models.</span>
+<span class="sd">            :type model: str</span>
+
+<span class="sd">            :param colour: The colour of the light. Note: this is for drawing only - no system currently implemented in *Sandbox* can detect a light&#39;s colour.</span>
+<span class="sd">            :type colour: str</span>
+
+<span class="sd">            :param label: A light source&#39;s label defines a group. Any :class:`LightSensor` with the same label attribute will detect all, and only, light sources in that group. A :class:`LightSensor` with no label will detect any :class:`LightSource` in its list, regardless of label.</span>
+<span class="sd">            :type label: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">is_on</span><span class="p">)</span>  <span class="c1"># call Stimulus constructor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">brightness</span> <span class="o">=</span> <span class="n">brightness</span>  <span class="c1"># this is the brightness of the light at the source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_brightness</span> <span class="o">=</span> <span class="n">brightness</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">gradient</span>  <span class="c1"># this determines how quickly the brightness decays when the linear model is used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_gradient</span> <span class="o">=</span> <span class="n">gradient</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>  <span class="c1"># model can be inv_sq, which is realistic, or linear, which is not physically realistic but is easier to work with</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_model</span> <span class="o">=</span> <span class="n">model</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">colour</span> <span class="o">=</span> <span class="n">colour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_colour</span> <span class="o">=</span> <span class="n">colour</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_label</span> <span class="o">=</span> <span class="n">label</span></div>
+
+<div class="viewcode-block" id="LightSource.draw"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to draw the light source in the specified matplotlib axes.</span>
+<span class="sd">            A :class:`LightSource` which is switched on is drawn as a circle with colour specified by the light source&#39;s ``colour`` attribute, with a smaller circle in its center which is orange coloured.  A :class:`LightSource` which is not on will have its outer circle coloured in grey.</span>
+
+<span class="sd">            :param ax: The Matplotlib axes to draw the light on.</span>
+<span class="sd">            :type ax: Matplotlib axes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_on</span><span class="p">:</span>
+            <span class="n">colour</span> <span class="o">=</span> <span class="s1">&#39;gray&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">colour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">colour</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;r.&#39;</span><span class="p">)</span></div>
+
+    <span class="c1"># draw light source in a pygame display</span>
+<div class="viewcode-block" id="LightSource.pygame_draw"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource.pygame_draw">[docs]</a>    <span class="k">def</span> <span class="nf">pygame_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shifty</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to draw the light source in the specified PyGame display.</span>
+<span class="sd">            A :class:`LightSource` which is switched on is drawn as a circle with colour specified by the light source&#39;s ``colour`` attribute, with a smaller circle in its center which is orange coloured.  A :class:`LightSource` which is not on will have its outer circle coloured in grey.</span>
+
+<span class="sd">            :param screen: The PyGame display to draw on.</span>
+<span class="sd">            :type screen: PyGame display</span>
+
+<span class="sd">            :param scale: The scale to draw at.</span>
+<span class="sd">            :type scale: float</span>
+
+<span class="sd">            :param shiftx: The offset from centre in the x-axis for drawing.</span>
+<span class="sd">            :type shiftx: float</span>
+
+<span class="sd">            :param shifty: The offset from centre in the y-axis for drawing.</span>
+<span class="sd">            :type shifty: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_on</span><span class="p">:</span>
+            <span class="n">colour</span> <span class="o">=</span> <span class="s1">&#39;gray&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">colour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">colour</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">shifty</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">scale</span><span class="o">*</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="n">scale</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">shiftx</span><span class="p">,</span> <span class="n">scale</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">shifty</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">scale</span><span class="o">*</span><span class="mf">0.2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LightSource.get_brightness_at"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource.get_brightness_at">[docs]</a>    <span class="k">def</span> <span class="nf">get_brightness_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to get the brightness of the light (as it is perceived) at the given xy coordinates, according to the light source&#39;s ``model``.</span>
+
+<span class="sd">            :param x: The x-component of the position to find the brightness at.</span>
+<span class="sd">            :type x: float</span>
+
+<span class="sd">            :param y: The y-component of the position to find the brightness at.</span>
+<span class="sd">            :type y: float</span>
+
+<span class="sd">            :return: The perceived brightness at the given coordinates.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">brightness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_on</span><span class="p">:</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;inv_sq&#39;</span><span class="p">:</span>
+                <span class="n">brightness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv_sq_model</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+                <span class="n">brightness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_model</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;binary&#39;</span><span class="p">:</span>
+                <span class="n">brightness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">brightness</span>
+        <span class="k">return</span> <span class="n">brightness</span></div>
+
+    <span class="c1"># for some controllers, it is much easier to work with a linear light decay model. it is not physically realistic,</span>
+    <span class="c1"># but that does not matter to this assignment</span>
+<div class="viewcode-block" id="LightSource.linear_model"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource.linear_model">[docs]</a>    <span class="k">def</span> <span class="nf">linear_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to find the perceived brightness of the light source at the given distance, when the linear decay model is used.</span>
+
+<span class="sd">            :param dist: The distance from the light source.</span>
+<span class="sd">            :type dist: float</span>
+
+<span class="sd">            :return: The perceived brightness.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">brightness</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span> <span class="o">*</span> <span class="n">dist</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+    <span class="c1"># this is a more realistic model of light decay. for simple Braitenberg vehicle style robots the nonlinearity of</span>
+    <span class="c1"># light decay can lead to interesting behaviours</span>
+<div class="viewcode-block" id="LightSource.inv_sq_model"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource.inv_sq_model">[docs]</a>    <span class="k">def</span> <span class="nf">inv_sq_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to find the perceived brightness of the light source at the given distance, when the inverse square decay model is used.</span>
+
+<span class="sd">            :param dist: The distance from the light source.</span>
+<span class="sd">            :type dist: float</span>
+
+<span class="sd">            :return: The perceived brightness.</span>
+<span class="sd">            :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">brightness</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">dist</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 1 is added to fix brightness at dist=0</span></div>
+
+<div class="viewcode-block" id="LightSource.get_data"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Get the :class:`LightSource`&#39;s data. This method, if used, relies on the assumption that the :class:`LightSource` and its properties are static.</span>
+
+<span class="sd">            :return: The :class:`LightSource`&#39;s data in dict form.</span>
+<span class="sd">            :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;brightness&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">brightness</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;colour&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">colour</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="LightSource.reset"><a class="viewcode-back" href="../../stimuli_sensors.html#Sandbox.LightSource.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A method to reset the :class:`LightSource` to its original state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">brightness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_brightness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_gradient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_colour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_label</span></div></div>
+
+<span class="k">class</span> <span class="nc">PerturbableLightSource</span><span class="p">(</span><span class="n">LightSource</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">perturb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># print(&quot;Perturbable:perturb&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">random_in_interval</span><span class="p">(</span><span class="n">minimum</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">random_in_interval</span><span class="p">(</span><span class="n">minimum</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, chris johnson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
